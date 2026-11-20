@@ -4,6 +4,14 @@
 
 VERIQ is a self-hosted workbench for API and browser QA. It links test cases, execution evidence, and retest rounds. The built-in Items example runs entirely on your machine.
 
+## 先看实跑报告
+
+**接口返回 HTTP 200，资源归属断言失败。** 本地 Items 模拟服务返回了 `owner: "another_user"`。报告保存了脱敏后的请求、响应和断言结果。恢复正常响应后，同一条用例重跑通过。
+
+[下载示例报告 ZIP](https://github.com/coewarrior/veriq-workbench/releases/download/v0.17.138/veriq-items-demo.zip) · [在本地复现](examples/items/README.md#验证工具确实能检出错误)
+
+![Items 实跑报告节选。查询返回 HTTP 200，响应 owner 为 another_user，用例判定失败。](docs/assets/items-assertion.png)
+
 ## 快速开始
 
 - [运行网页工作台](docs/LOCAL_WEB.md)。使用 Linux（Windows 用户可用 WSL2）、Python 3.11+ 和 PostgreSQL。文档包含用 Docker 初始化本地数据库的完整步骤。
