@@ -1,0 +1,72 @@
+{
+  "package": "@designcodeio/threeui",
+  "version": "1.2.0",
+  "source": "https://registry.npmjs.org/@designcodeio/threeui/-/threeui-1.2.0.tgz",
+  "files": [
+    {
+      "path": "src/shaders/neuform-isolated/sources/connectivity-graph.html",
+      "sha256": "98592824dd1109702cd72e9deca1cae7239169396c8245e8bbd786997d9bdf13"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/constellation-field.html",
+      "sha256": "1920ad4fe34f2ed2348e3a52110c37b4969bc45d71ff29f2738cb4542ad9f610"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/defense-lines.html",
+      "sha256": "1cd230f6a060023f99cbbe9ebc63e37409bf7ed70507e1ef44edc2342a0b9f91"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/diagnostics-panel.html",
+      "sha256": "6d05694bf0061e50aa7811548382be99d748a231113106ca242b5627b2fe9f68"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/flow-field.html",
+      "sha256": "78eaf8ce34317bb66c44b72069ff36c622987ef61d3e703e8ea5800e089eb0b2"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/flux-vortex.html",
+      "sha256": "ec02a0cfd079c9345dc11549653b1a52feac11f98ae10051a786da65710b0f1c"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/gateway-flow.html",
+      "sha256": "c5a1de43138ffba96b9f0ecdcf3c054ae251ec94344e88c6ad502bae362b17d0"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/interface-lines.html",
+      "sha256": "608cbc6976996b8a5b6c4aaba4bee4d6f2dd44579b819df45914f35bc310d2cc"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/matrix-field.html",
+      "sha256": "7ee84b44ccad91f131563f34c633596a4c105512e8f0aa4303736f77681db835"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/particle-drift.html",
+      "sha256": "7fad6cc8c54c0385c472c2879762b3fd2bfb061820bf925034d7a58a0048eb27"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/particle-network.html",
+      "sha256": "bc7bffdc48a9019cbba937dab9d335b85f20ac8a472f10dfa3d553da439cfdb7"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/portal-field.html",
+      "sha256": "f90e34f83d5179217c6f0928d633ec4a8201b00cfb980b374b5df76a9f167a6e"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/skeuomorphic-toggle.html",
+      "sha256": "3e19e7fec9ac3339f29c888341aad1f6f4009d1c1d76f0231c3ad24a6ce49b5a"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/topo-field.html",
+      "sha256": "70dbdaaec6398be9fcf05843f6c5af65e761d29187e60064673bbeb55888379f"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/wireframe-forms.html",
+      "sha256": "828c6a635b54d734256addb0e26b1f16b3f9798aa47cfe9c966d5bb181682a6c"
+    },
+    {
+      "path": "src/shaders/fonts/fragment-mono.woff2",
+      "source": "https://raw.githubusercontent.com/MengTo/threeui/main/src/shaders/fonts/fragment-mono.woff2",
+      "sha256": "4f4dc27f4a770c0d02fde800daa836c8adc0d1e423b28da74baaf0d1cc3ab96c"
+    }
+  ]
+}

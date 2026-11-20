@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101622">
+  <title>探真 · VERIQ</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon-orbit.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon-orbit.png">
+  <link rel="stylesheet" href="/static/account-bar.css">
+  <link rel="stylesheet" href="/static/home.css">
+  <link rel="stylesheet" href="/static/home-water/water.css">
+  <script type="module" src="/static/home-water/water.js"></script>
+  <script type="module" src="/static/home-induction/induction.js"></script>
+  <script src="/static/home.js" defer></script>
+  <script src="/static/account-bar.js" defer></script>
+<link rel="stylesheet" href="/static/controls.css"></head>
+<body>
+  <div id="home-water" aria-hidden="true"></div>
+  <div class="home-shell">
+    <header class="home-header">
+      <div id="home-account"></div>
+    </header>
+    <main class="home-main">
+      <div class="home-selection">
+      <div class="home-heading"><h1>选择测试类型</h1></div>
+      <div class="test-types">
+        <section class="test-type-card api-card" aria-labelledby="api-title">
+          <div class="card-top"><span class="type-icon api-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="m10 8-7 8 7 8m12-16 7 8-7 8M19 5l-6 22"/></svg></span><span class="availability"><i></i>已开放</span></div>
+          <h2 id="api-title">API 测试</h2>
+          <p class="type-description">接口文档、用例执行与测试报告</p>
+          <a class="type-action induction-action" href="/api-testing" aria-label="进入 API 测试" data-induction-label="进入 API 测试"><span class="entry-label">进入 API 测试</span><span class="home-induction" aria-hidden="true"></span></a>
+        </section>
+        <section class="test-type-card ui-card" aria-labelledby="ui-title">
+          <div class="card-top"><span class="type-icon ui-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="3" y="5" width="26" height="22" rx="4"/><path d="M3 12h26M8 8.5h.1m3.9 0h.1M12 17l8 3-4 1-1 4z"/></svg></span><span class="availability"><i></i>已开放</span></div>
+          <h2 id="ui-title">页面测试</h2>
+          <p class="type-description">需求生成用例，按条件执行与续跑</p>
+          <a class="type-action induction-action" href="/ui-testing" aria-label="进入页面测试" data-induction-label="进入页面测试"><span class="entry-label">页面测试</span><span class="home-induction" aria-hidden="true"></span></a>
+        </section>
+      </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

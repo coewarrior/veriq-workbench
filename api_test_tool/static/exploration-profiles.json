@@ -1,0 +1,372 @@
+{
+  "schema": 3,
+  "profiles": [
+    {
+      "id": "aihire-b-20261018-v1",
+      "origins": [
+        "https://aihire.succaiss.com"
+      ],
+      "session_strategy": "independent_login",
+      "evidence": {
+        "backend_revision": "aedb54ab9514e5ed1fed72fa60304a376bbc008d",
+        "frontend_revision": "1139bb81b5b3d6c508a23d116cffd66625c4db76",
+        "contract": "docs/AUTOMATIC_EXPLORATION.md"
+      },
+      "rules": [
+        {
+          "origin": "$target",
+          "path": "/",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/login",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/b",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/b/memory",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/b/skills",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/b/schedules",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/b/career-site",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/b/connectors",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/b/settings/connectors",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "_rsc": "[A-Za-z0-9_-]*",
+            "next": "/[^\\r\\n]*",
+            "returnTo": "/[^\\r\\n]*",
+            "tab": "connectors|skills",
+            "dev": "1"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/_next/static/*",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "v": "[A-Za-z0-9_.-]*"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/favicon.ico",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/auth/session",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/auth/session/workspace",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/account-memory/catalog",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/account-schedules/notification-options",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/v2/hr/career-site",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/v2/hr/account-plan",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/v2/hr/business-contact",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/v2/connectors",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/v2/hr/onboarding-guides/recruiting-core",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {}
+        },
+        {
+          "origin": "$target",
+          "path": "/api/account-memory",
+          "method": "GET",
+          "effect": "prepared_read",
+          "optional_query_patterns": {
+            "cursor": "[^\\r\\n]*",
+            "limit": "[0-9]+",
+            "visibility": "personal|tenant",
+            "q": "[^\\r\\n]*"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/account-skills",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "cursor": "[^\\r\\n]*",
+            "limit": "[0-9]+"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/account-schedules",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "cursor": "[^\\r\\n]*",
+            "limit": "[0-9]+"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/account-schedules/notifications",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "cursor": "[^\\r\\n]*",
+            "limit": "[0-9]+",
+            "scheduleId": "[A-Za-z0-9_-]*"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/account-schedules/*",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {},
+          "path_pattern": "/api/account-schedules/[A-Za-z0-9_-]+"
+        },
+        {
+          "origin": "$target",
+          "path": "/api/account-schedules/*/occurrences",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "cursor": "[^\\r\\n]*",
+            "limit": "[0-9]+"
+          },
+          "path_pattern": "/api/account-schedules/[A-Za-z0-9_-]+/occurrences"
+        },
+        {
+          "origin": "$target",
+          "path": "/api/v2/hr/notifications",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "cursor": "[^\\r\\n]*",
+            "limit": "[0-9]+",
+            "status": "unread|read|all|UNREAD|READ|ALL"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/v2/external-mcp-services",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "view": "discover|mine"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/v2/external-mcp-providers",
+          "method": "GET",
+          "effect": "verified_read",
+          "optional_query_patterns": {
+            "view": "discover|mine"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/auth/password/sessions",
+          "method": "POST",
+          "effect": "isolated_session",
+          "body_patterns": {
+            "channel": "PHONE|EMAIL",
+            "password": "[\\s\\S]+"
+          },
+          "optional_body_patterns": {
+            "deviceName": "[\\s\\S]{0,256}"
+          },
+          "body_bindings": {
+            "destination": {
+              "field": "identity",
+              "format": "optional_cn_phone_prefix"
+            }
+          },
+          "credential_fields": {
+            "password": "password"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/auth/session/workspace",
+          "method": "POST",
+          "effect": "isolated_session",
+          "body_equals": {
+            "workspace": "B"
+          },
+          "optional_body_patterns": {
+            "deviceName": "[\\s\\S]{0,256}"
+          }
+        },
+        {
+          "origin": "$target",
+          "path": "/api/auth/refresh",
+          "method": "POST",
+          "effect": "isolated_session"
+        }
+      ],
+      "observations": [
+        {
+          "key": "session",
+          "origin": "$target",
+          "path": "/api/auth/session",
+          "method": "GET",
+          "status": 200,
+          "body_equals": {
+            "/status": "authenticated",
+            "/user/workspace": "B"
+          },
+          "body_types": {
+            "/user": "object"
+          }
+        },
+        {
+          "key": "memory_initialized",
+          "origin": "$target",
+          "path": "/api/account-memory",
+          "method": "GET",
+          "status": 200,
+          "body_types": {
+            "/items": "array"
+          }
+        }
+      ]
+    }
+  ]
+}

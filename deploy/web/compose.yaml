@@ -1,0 +1,96 @@
+name: api-test-web
+services:
+  web:
+    image: api-test-web:0.10.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    environment:
+      API_TEST_DATA_DIR: /data
+      API_TEST_HOSTS: 192.0.2.20
+      API_TEST_PUBLIC_REPORT_PORT: '18090'
+      API_TEST_FIXTURE_PORT: '18082'
+      API_TEST_DB_HOST: veriq-postgres
+      API_TEST_DB_PORT: '5432'
+      API_TEST_DB_NAME: veriq
+      API_TEST_DB_USER: veriq
+      API_TEST_DB_PASSWORD_FILE: /run/secrets/veriq_app_password
+      API_TEST_ALLOWED_ORIGINS: ${API_TEST_ALLOWED_ORIGINS:-}
+      PINGCODE_ALLOWED_ORIGINS: ${PINGCODE_ALLOWED_ORIGINS:-}
+      PINGCODE_CONFIG_FILE: ${PINGCODE_CONFIG_FILE:-}
+      GOMOKU_CLEANUP_MODE: mysql
+      GOMOKU_CLEANUP_HOST: ai-api-gomoku-db-1
+      GOMOKU_CLEANUP_PASSWORD: ${GOMOKU_CLEANUP_PASSWORD:?required}
+    ports:
+      - '${BIND_ADDRESS:-192.0.2.20}:${WEB_PORT:-18089}:18089'
+      - '0.0.0.0:${PUBLIC_REPORT_PORT:-8888}:18090'
+    volumes:
+      - web_data:/data
+    networks:
+      - gomoku_backend
+      - veriq_storage
+    secrets:
+      - veriq_app_password
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 8g
+    cpus: 0
+    pids_limit: 12288
+    stop_grace_period: 5m
+    healthcheck:
+      test: [CMD, python, -c, 'import urllib.request; urllib.request.urlopen("http://127.0.0.1:18089/healthz", timeout=3).read()']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+
+  # Provisioned only by the dedicated Jenkins release helper. No host port or
+  # access to the example/business database network is granted to this service.
+  veriq-postgres:
+    image: postgres:17-bookworm@sha256:858bb5e98eed02eb8cafbcdc007f9a65d1b613972028944a8ec2133ccaf80d27
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/veriq_admin_password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - veriq_postgres_data:/var/lib/postgresql/data
+    networks: [veriq_storage]
+    secrets: [veriq_admin_password]
+    restart: unless-stopped
+    mem_limit: 2g
+    pids_limit: 256
+    stop_grace_period: 5m
+    healthcheck:
+      test: [CMD, pg_isready, -h, 127.0.0.1, -U, postgres, -d, postgres]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+
+networks:
+  gomoku_backend:
+    external: true
+    name: ai-api-gomoku_backend
+  veriq_storage:
+    name: api-test-web_storage
+    internal: true
+volumes:
+  web_data: {}
+  veriq_postgres_data:
+    name: api-test-web_postgres_data
+secrets:
+  veriq_admin_password:
+    file: ./secrets/postgres-admin.runtime
+  veriq_app_password:
+    file: ./secrets/postgres-app.runtime

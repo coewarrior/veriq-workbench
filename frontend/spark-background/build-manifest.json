@@ -1,0 +1,59 @@
+{
+  "source": "https://threeui.com/source-code/spark-badge.json",
+  "revision": "a8eefdee0d87",
+  "variant": "badge",
+  "props": {
+    "speed": 1,
+    "particleAmount": 1,
+    "rainAmount": 1,
+    "turbulence": 1,
+    "spread": 1
+  },
+  "sceneUrl": "/static/spark-background/veriq-badge.html",
+  "branding": {
+    "wordmark": "VERIQ",
+    "sha256": "32bf1260e0ea7a24c763ae9adaa7ec74f3cfa2ac7fb1fd613f15dd2ecff44497"
+  },
+  "registeredFiles": [
+    {
+      "path": "src/shaders/spark-badge/SparkBadge.tsx",
+      "sha256": "2968baef448957765473ccd031f4337d376dbace5e8ec5434d0a57299ffecdda"
+    },
+    {
+      "path": "src/shaders/spark-badge/spark-badge.html",
+      "sha256": "a8eefdee0d87deefae9b8b8dac4d79c0ee41447578a78090cad9c956e33ccf90"
+    },
+    {
+      "path": "src/shaders/threeui.css",
+      "sha256": "efe4447139f1358dd8e9be68edf6fa46cbefbd1de423a4d6c439ca61d2c8eccf"
+    }
+  ],
+  "support": [
+    {
+      "path": "src/shaders/fonts/fragment-mono.woff2",
+      "sha256": "4f4dc27f4a770c0d02fde800daa836c8adc0d1e423b28da74baaf0d1cc3ab96c"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "b2a071ba22fefd803f4e9d1f5c777dd79c62d191695586a1a73fd4d0ebd051c6"
+    },
+    {
+      "path": "FONT-LICENSES.md",
+      "sha256": "05f4ec01ea30193a48878689209f39a2b6541e44291ad8ddc1909a1c1b8b6eeb"
+    }
+  ],
+  "outputs": {
+    "background.js.LEGAL.txt": {
+      "bytes": 1241
+    },
+    "background.js": {
+      "bytes": 144410
+    },
+    "fragment-mono.woff2": {
+      "bytes": 15176
+    },
+    "background.css": {
+      "bytes": 29069
+    }
+  }
+}

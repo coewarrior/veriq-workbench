@@ -1,0 +1,12 @@
+{
+  "name": "@designcodeio/threeui",
+  "version": "0.0.0-fa86582fc870",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/shaders/predictive-arc/PredictiveArcCanvas.tsx",
+    "./style.css": "./src/shaders/threeui.css"
+  },
+  "peerDependencies": { "react": ">=18 <20" }
+}

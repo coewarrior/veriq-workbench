@@ -1,0 +1,264 @@
+/* Shared interaction layer. CSS reflections only; no extra canvas or idle animation. */
+@media screen {
+  :root body :is(button, a.primary, .api-action, .sidebar-action) {
+    --control-fill: linear-gradient(175deg, #536177 0%, #303c50 43%, #202a3b 49%, #38465c 100%);
+    background: var(--control-fill);
+    border-color: #bcc2ca5c;
+    border-radius: 10px;
+    color: #ecf2fc;
+    box-shadow: inset 0 1px 0 #ffffff38, inset 0 -1px 0 #0005, 0 3px 7px #0003;
+    text-shadow: 0 1px 1px #0005;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: border-color 160ms ease, box-shadow 160ms ease, filter 160ms ease, transform 100ms ease;
+  }
+  :root body :is(button.primary, a.primary, .pc-primary, .pc-push, .copy-defect, .api-action) {
+    --control-fill: linear-gradient(175deg, #edf3ff 0%, #aebed6 42%, #8197b7 49%, #c8d7eb 100%);
+    background: var(--control-fill);
+    border-color: #e1e4e9b3;
+    color: #14233b;
+    text-shadow: 0 1px 0 #ffffff66;
+    font-weight: 650;
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #5a729988, 0 4px 12px #0005;
+  }
+  /* Navigation and tiny actions stay quiet until approached. */
+  :root body :is(.stepper button, .sidebar-action, .project-list button, .text-button,
+    .trash-link, .terminal-bar button, .icon-button) {
+    background: transparent;
+    box-shadow: none;
+    text-shadow: none;
+  }
+  :root body :is(button.example, button.mode-option) {
+    background: linear-gradient(155deg, #41516b77, #18243899);
+    border-color: #b6bec94d;
+    box-shadow: inset 0 1px #d8e6ff26;
+    text-shadow: none;
+  }
+  :root body :is(button.danger-button, button.danger-text) {
+    --control-fill: linear-gradient(175deg, #754454, #462a39 48%, #633647);
+    color: #ffc3ce !important;
+    border-color: #db859d70;
+  }
+  @media (hover: hover) {
+    :root body :is(button, a.primary, .api-action, .sidebar-action):hover:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+      background: var(--control-fill);
+      border-color: #e1e4e9;
+      box-shadow: inset 0 1px 0 #ffffff66, 0 0 0 1px #d0d5dc40, 0 5px 16px #0005;
+      filter: brightness(1.14);
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+    :root body :is(.stepper button, .sidebar-action, .project-list button, .text-button,
+      .trash-link, .terminal-bar button, .icon-button):hover:not(:disabled):not([aria-busy="true"]) {
+      background: #d5d9e020;
+      color: #f3f7ff;
+    }
+    :root body summary:hover { color: #e7f2ff; background-color: #d5d9e014; border-radius: 6px; }
+  }
+  :root body :is(.mode-option.selected, button[aria-pressed="true"], .project-list button.current,
+    .sidebar-action.active, .kpi.active) {
+    background: linear-gradient(160deg, #cdd2da30, #9ba4b51a);
+    border-color: #cdd2da70;
+    box-shadow: inset 0 1px #ffffff38, inset 0 0 0 1px #d2d7df30;
+    color: #f3f7ff;
+  }
+  :root body .project-list button.current { border-left: 0; }
+  :root body .sidebar-bottom .sidebar-management .sidebar-action.active {
+    background: linear-gradient(160deg, #cdd2da30, #9ba4b51a);
+    box-shadow: inset 0 1px #ffffff38, inset 0 0 0 1px #d2d7df45;
+  }
+  :root body .workspace .dropzone:is(:hover, .dragging) {
+    background: #d5d9e014;
+    border-color: #cdd2da;
+  }
+  :root body input:is([type=checkbox], [type=radio]) { accent-color: #b9c0cb; }
+  /* Include the number, both text lines and breathing room in the hit area. */
+  :root body .stepper button {
+    padding: 10px 12px;
+    min-height: 54px;
+    flex-shrink: 0;
+    line-height: 1.5;
+  }
+  @media (max-width: 1190px) {
+    :root body .stepper { gap: 6px; }
+    :root body .stepper button { padding: 9px 8px; flex: 1 1 0; }
+    :root body .stepper button > span { white-space: normal; }
+    :root body .stepper i { flex: 0 0 10px; min-width: 0; }
+  }
+  @media (max-width: 680px) {
+    :root body .stepper { padding: 10px 6px; gap: 4px; }
+    :root body .stepper button { padding: 8px 4px; min-height: 68px; }
+    :root body .stepper button > span { text-align: center; }
+    :root body .stepper i { flex-basis: 8px; margin-top: 23px; }
+  }
+  :root body .stepper button.active {
+    background: linear-gradient(160deg, #dae3f02b, #a7b4c512);
+    color: #f2f4f8;
+    box-shadow: inset 0 0 0 1px #e2e7ef45, inset 0 1px #ffffff24;
+  }
+  :root body .stepper button.active > span { color: #f2f4f8; }
+  :root body .stepper button.active small { color: #b9c2cf; }
+  :root body .stepper button.active b {
+    background: linear-gradient(160deg, #9ca9bb, #546175);
+    border-color: #c6cfdb66;
+    color: #fff;
+    box-shadow: inset 0 1px #ffffff38;
+  }
+  :root body .stepper button:hover:not(:disabled):not([aria-busy="true"]) {
+    background: #d8e0ec20;
+    box-shadow: inset 0 0 0 1px #e2e7ef60, inset 0 1px #ffffff26;
+  }
+  :root body .stepper button:focus-visible { outline-color: #dce2eb; }
+  :root body .stepper button:active:not(:disabled):not([aria-busy="true"]) {
+    box-shadow: inset 0 2px 5px #0007, inset 0 0 0 1px #dce2eb66;
+  }
+  :root body :is(button, a.primary, .api-action, .sidebar-action):active:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+    transform: translateY(1px) scale(.985);
+    filter: brightness(.92);
+    box-shadow: inset 0 2px 5px #0007, 0 0 0 1px #d7dce466;
+  }
+  :root body :is(button, a, summary):focus-visible {
+    outline: 2px solid #dce1e8;
+    outline-offset: 3px;
+  }
+  :root body :is(button:disabled, [aria-disabled="true"]) {
+    opacity: .43;
+    filter: saturate(.35);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  :root body button[aria-busy="true"] {
+    cursor: progress;
+    opacity: .85;
+    outline: 1px solid #d4dae280;
+    outline-offset: 2px;
+  }
+  :root body button[aria-busy="true"]::after {
+    content: "";
+    display: inline-block;
+    width: .8em; height: .8em;
+    margin-left: .55em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    vertical-align: middle;
+    animation: control-wait 800ms linear infinite;
+  }
+  /* Keep the chosen option recognizable even while the pointer remains on it. */
+  :root body :is(button[aria-pressed="true"], button.selected, button.current, button.kpi.active):hover:not(:disabled):not([aria-busy="true"]) {
+    background: linear-gradient(160deg, #cdd2da40, #9ba4b528);
+    box-shadow: inset 0 1px #ffffff55, inset 0 0 0 1px #d9dee680;
+    color: #f3f7ff;
+  }
+  :root body .task-presets { display: flex; flex-wrap: wrap; gap: 8px; }
+  :root body .terminal-bar button { padding: 3px 7px; min-height: 24px; }
+  @keyframes control-wait { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    :root body :is(button, a.primary, .api-action, .sidebar-action) { transition: none; }
+    :root body :is(button, a.primary, .api-action, .sidebar-action):is(:hover, :active) { transform: none; }
+    :root body button[aria-busy="true"]::after { animation: none; }
+  }
+}
+
+/* Workspace controls: Star Portal's soft gradient and glow, adapted to dense forms.
+   Reference: https://threeui.com/buttons/star-portal/star-portal
+   The homepage keeps its independently configured Induction surface. */
+@media screen {
+  :root body:not(:has(#home-water)) :is(button, a.primary, .sidebar-action) {
+    --control-fill: linear-gradient(150deg, #243448b3, #15202ec2);
+    background: var(--control-fill);
+    border-color: #a6bdd33d;
+    border-radius: 12px;
+    color: #e5edf6;
+    text-shadow: none;
+    box-shadow: inset 0 1px 0 #ffffff12, 0 2px 8px #0000001a;
+    transition: background-color 320ms ease, border-color 320ms ease,
+      box-shadow 400ms ease, color 220ms ease, transform 320ms cubic-bezier(.2,.8,.2,1);
+    filter: none;
+  }
+  :root body:not(:has(#home-water)) :is(button.primary, a.primary, .pc-primary, .pc-push, .copy-defect) {
+    --control-fill: linear-gradient(135deg, #fffffff0 0%, #f0dccde6 50%, #dcf0ffe6 100%);
+    background: var(--control-fill);
+    border-color: #ffffff66;
+    border-radius: 999px;
+    color: #172330;
+    font-weight: 650;
+    box-shadow: 0 0 20px #ffffff15, inset 0 1px 0 #ffffff99;
+  }
+  :root body:not(:has(#home-water)) :is(.stepper button, .sidebar-action, .project-list button,
+    .text-button, .trash-link, .terminal-bar button, .icon-button) {
+    --control-fill: #b9d9f210;
+    background: transparent;
+    box-shadow: none;
+  }
+  :root body:not(:has(#home-water)) :is(button.example, button.mode-option) {
+    --control-fill: linear-gradient(145deg, #273a4d66, #15202e66);
+    background: var(--control-fill);
+    border-color: #a6bdd333;
+    box-shadow: inset 0 1px #ffffff0a;
+  }
+  :root body:not(:has(#home-water)) :is(button.danger-button, button.danger-text, #pc-clear) {
+    --control-fill: #632c3b40;
+    background: var(--control-fill);
+    color: #ffaebe !important;
+    border-color: #e38ba34d;
+    box-shadow: none;
+  }
+  :root body:not(:has(#home-water)) :is(.mode-option.selected, button[aria-pressed="true"],
+    .project-list button.current, .sidebar-action.active, .kpi.active, .stepper button.active) {
+    --control-fill: linear-gradient(135deg, #7edce326, #a4c5ed12);
+    background: var(--control-fill);
+    border-color: #9bdde266;
+    box-shadow: inset 0 0 0 1px #9bdde21a;
+    color: #e9fcff;
+  }
+  :root body:not(:has(#home-water)) .sidebar-bottom .sidebar-management .sidebar-action.active {
+    background: var(--control-fill);
+    box-shadow: inset 0 0 0 1px #9bdde22e;
+  }
+  @media (hover: hover) {
+    :root body:not(:has(#home-water)) :is(button, a.primary, .sidebar-action):hover:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+      background: var(--control-fill);
+      border-color: #b4dde485;
+      box-shadow: inset 0 1px #ffffff24, 0 0 15px #9bcfef12;
+      filter: none;
+    }
+    :root body:not(:has(#home-water)) :is(button.primary, a.primary, .pc-primary, .pc-push, .copy-defect):hover:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+      color: #172330;
+      border-color: #ffffffa6;
+      box-shadow: 0 0 28px #ffdcb43b, inset 0 1px 0 #ffffffcc;
+      transform: translateY(-1px) scale(1.015);
+    }
+    :root body:not(:has(#home-water)) :is(button.danger-button, button.danger-text, #pc-clear):hover:not(:disabled):not([aria-busy="true"]) {
+      border-color: #e38ba38c;
+      box-shadow: 0 0 14px #dc6c831a;
+    }
+    :root body:not(:has(#home-water)) :is(.stepper button, .sidebar-action, .project-list button, .text-button, .trash-link, .terminal-bar button, .icon-button):hover {
+      transform: none;
+    }
+  }
+  :root body:not(:has(#home-water)) :is(button, a.primary, .sidebar-action):active:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+    transform: translateY(1px) scale(.985);
+    box-shadow: inset 0 2px 5px #00000026;
+    filter: none;
+  }
+  :root body:not(:has(#home-water)) :is(button, a, summary):focus-visible {
+    outline-color: #a1e4ed;
+    outline-offset: 3px;
+  }
+  :root body:not(:has(#home-water)) :is(button:disabled, button[aria-disabled="true"]) {
+    opacity: .43;
+    filter: saturate(.35);
+    box-shadow: none;
+    transform: none;
+  }
+  :root body:not(:has(#home-water)) button[aria-busy="true"] {
+    transform: none;
+    outline-color: #aadce680;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root body:not(:has(#home-water)) :is(button, a.primary, .sidebar-action) { transition: none; }
+    :root body:not(:has(#home-water)) :is(button, a.primary, .sidebar-action):is(:hover, :active) { transform: none !important; }
+  }
+}

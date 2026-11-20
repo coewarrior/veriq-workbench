@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#30372a">
+  <title>登录 · 探真 VERIQ</title>
+  <link rel="stylesheet" href="/static/sylva-background/background.css">
+  <link rel="stylesheet" href="/static/sylva-background/metal.css">
+  <link rel="stylesheet" href="/static/login.css">
+  <script src="/static/login.js" defer></script>
+  <script src="/static/sylva-background/metal.js" defer></script>
+  <script type="module" src="/static/sylva-background/background.js"></script>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon-orbit.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-orbit-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon-orbit.png">
+</head>
+<body>
+  <div id="login-background" aria-hidden="true"></div>
+  <div class="scene-shade" aria-hidden="true"></div>
+  <header class="page-header">
+    <div class="brand"><img src="/static/brand-orbit.svg" alt="" width="40" height="40"><span>探真<small>VERIQ</small></span></div>
+    <span class="workspace-badge"><i aria-hidden="true"></i>团队工作空间</span>
+  </header>
+  <main class="login-layout">
+    <section class="welcome" aria-labelledby="welcome-heading">
+      <p class="eyebrow">AI 驱动的测试与质量平台</p>
+      <h1 id="welcome-heading">让每一次测试，<br>都有迹可循。</h1>
+      <p class="welcome-copy">把测试资料、执行过程与缺陷证据，<br>留在同一个工作空间。</p>
+      <ol class="journey" aria-label="测试流程"><li>导入文档</li><li>生成用例</li><li>执行测试</li><li>查看报告</li></ol>
+    </section>
+    <section class="auth-panel" aria-labelledby="heading">
+      <div class="panel-top"><span class="panel-marker" aria-hidden="true">↗</span><span>你的下一次测试，从这里开始</span></div>
+      <h2 id="heading">登录你的工作空间</h2>
+      <div class="tabs" aria-label="选择登录或注册"><button id="login-tab" type="button" aria-pressed="true">登录</button><button id="register-tab" type="button" aria-pressed="false">注册账号</button></div>
+      <form id="auth-form">
+        <label>账号<input name="username" autocomplete="username" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_.-]{3,32}" placeholder="输入你的账号"></label>
+        <label>密码<input name="password" type="password" autocomplete="current-password" required minlength="6" maxlength="128" placeholder="输入密码，至少 6 位"></label>
+        <label id="confirm-label" hidden>确认密码<input name="confirm" type="password" autocomplete="new-password" minlength="6" maxlength="128" placeholder="再次输入密码"></label>
+        <p id="error" role="alert"></p>
+        <div class="submit-wrap"><div class="liquid-stage auth-metal" data-liquid-metal="login">
+          <div class="liquid-plate plate" aria-hidden="true"></div><canvas class="liquid-fx" aria-hidden="true"></canvas>
+          <button id="submit" type="submit" class="primary liquid-button" disabled>登录</button>
+        </div></div>
+      </form>
+      <p class="foot">首次使用可直接注册，无需邮箱或验证码。<br>账号支持字母、数字、点、横线和下划线。</p>
+    </section>
+  </main>
+  <footer class="page-footer"><span>文档 · 测试 · 证据</span><span>在一个空间里，完成整个流程。</span></footer>
+</body>
+</html>

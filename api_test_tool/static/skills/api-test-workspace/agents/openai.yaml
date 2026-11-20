@@ -1,0 +1,4 @@
+interface:
+  display_name: "接口测试"
+  short_description: "至少覆盖正向、逆向、边界和安全场景，并按接口风险主动扩充"
+  default_prompt: "使用 $api-test-workspace，至少覆盖每个接口的正向、逆向、边界和安全场景，再根据业务与风险主动扩充，完成设计或执行并交付中文报告。"

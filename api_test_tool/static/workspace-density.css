@@ -1,0 +1,68 @@
+/* Workspace density: quiet navigation and more room for the working content. */
+@media screen {
+  :root body .shell .workspace main { max-width: none; padding: 20px 24px 0; }
+  :root body .shell .topbar { height: 52px; padding: 0 24px; }
+  :root body .shell .page-title { margin-bottom: 18px; }
+  :root body .shell .page-title h1 { font-size: 24px; }
+  :root body .shell .page-title p:not(.eyebrow) { margin-top: 6px; }
+  :root body .shell .stepper { padding: 12px 18px; margin-bottom: 16px; border-radius: 12px; }
+  :root body .shell :is(.panel, .cli-card, .context-card) { padding: 18px; border-radius: 12px; }
+  :root body .shell .panel { margin-bottom: 16px; }
+  :root body .shell .panel-heading { margin-bottom: 14px; }
+  :root body .shell .panel-footer { margin-top: 16px; padding-top: 14px; }
+  :root body .shell .job-status { margin-bottom: 16px; padding: 9px 12px; border-radius: 10px; }
+  :root body .shell .mode-options { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  :root body .shell :is(button.mode-option, button.example) { padding: 10px 12px; border-radius: 8px; }
+  :root body .shell .mode-option strong { margin-bottom: 3px; }
+  :root body .shell .context-card { margin-top: 12px; }
+  :root body .shell .terminal { border-radius: 8px; }
+  :root body .shell .terminal pre { min-height: 0; padding: 12px; }
+  :root body .shell .page-footer { padding: 18px 0; }
+  :root body .shell .stat { padding: 12px; border-radius: 8px; }
+  :root body .shell .sidebar .brand { margin-bottom: 24px; font-size: 18px; }
+  :root body .shell .sidebar-label { margin-left: 8px; margin-right: 8px; margin-bottom: 8px; }
+  :root body .shell .sidebar .new-project {
+    padding: 8px 10px; margin-bottom: 16px; font-size: 13px;
+    background: #d2d6dd0d; border-color: #ccd1da30; border-radius: 7px;
+    box-shadow: none; text-shadow: none;
+  }
+  :root body .shell .project-list .session-row > button[data-project] {
+    padding: 7px 34px 7px 10px; margin: 2px 0; border: 0; border-radius: 6px;
+    box-shadow: none; text-shadow: none;
+  }
+  :root body .shell .project-list button.current { background: #d2d6dd24; color: #eef0f4; }
+  :root body .shell .project-list button small { margin-top: 2px; }
+  :root body .shell .project-list .session-more { top: 5px; }
+  :root body .shell .sidebar-bottom { gap: 6px; padding-top: 8px; margin-top: 10px; }
+  :root body .shell .sidebar-management { gap: 2px; }
+  :root body .shell .sidebar-bottom .sidebar-action {
+    min-height: 34px; padding: 6px 8px; gap: 8px; border-radius: 6px; box-shadow: none;
+  }
+  :root body .shell .sidebar :is(button, .sidebar-action):hover:not(:disabled) {
+    transform: none; filter: none; box-shadow: none; background: #d2d6dd20;
+  }
+  :root body .shell .account-bar {
+    padding: 9px 8px 0; border: 0; border-top: 1px solid #d2d6dd1c; border-radius: 0;
+    background: transparent; box-shadow: none; backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    grid-template-columns: 28px minmax(0,1fr) 30px; gap: 8px;
+  }
+  :root body .shell .account-avatar { width: 28px; height: 28px; border-radius: 7px; }
+  @media (min-width: 931px) {
+    :root body .shell { grid-template-columns: 224px minmax(0,1fr); }
+    :root body .shell .sidebar { padding: 22px 12px 14px; }
+    :root body .shell .content-grid { grid-template-columns: minmax(0,1fr) 248px; gap: 16px; }
+  }
+  @media (max-width: 930px) {
+    :root body .shell .workspace main { padding: 18px 16px 0; }
+  }
+  @media (max-width: 680px) {
+    :root body .shell .sidebar .brand { margin-bottom: 0; font-size: 17px; }
+    :root body .shell .sidebar .new-project { margin: 0; }
+    :root body .shell .mode-options { grid-template-columns: 1fr; }
+    :root body .shell :is(.panel, .cli-card, .context-card) { padding: 15px; }
+    :root body .shell .topbar { padding: 0 16px; }
+    :root body .shell .stepper { padding: 12px 10px; }
+    :root body .shell .sidebar-bottom .sidebar-action { min-height: 40px; }
+  }
+}

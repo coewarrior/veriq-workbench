@@ -1,0 +1,25 @@
+// Stable Jenkins bootstrap. Stage logic is loaded from the pinned repository commit.
+properties([
+  disableConcurrentBuilds(),
+  buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '10')),
+  parameters([
+    booleanParam(name: 'DEPLOY', defaultValue: true, description: '检查通过后发布 main'),
+    choice(name: 'DEPLOY_TARGET', choices: ['intranet', 'cloud-118'], description: '发布目标；cloud-118 更新既有 user1 服务')
+  ]),
+  pipelineTriggers([pollSCM('H/2 * * * *')])
+])
+node('api-test-workspace') {
+  timestamps {
+    withEnv([
+      'DOCKER_HOST=unix:///run/user/1013/docker.sock',
+      'API_TEST_CI_ROOT=/home/veriq/jenkins-api-test'
+    ]) {
+      stage('Checkout main') {
+        checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+          userRemoteConfigs: [[url: 'git@api-test-gitlab:example/api-test-workspace.git']],
+          extensions: [[$class: 'DisableRemotePoll'], [$class: 'CleanBeforeCheckout']]])
+      }
+      load('ci/jenkins/stages.groovy').call()
+    }
+  }
+}

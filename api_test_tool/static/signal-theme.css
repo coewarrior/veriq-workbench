@@ -1,0 +1,139 @@
+/* Host integration only. The registered ThreeUI scene and its props are unchanged. */
+body { background: #000; }
+#signal-background-frame {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: #000;
+}
+.shell { position: relative; z-index: 1; background: transparent; }
+.workspace { background: transparent; }
+.sidebar { background: rgba(13, 18, 29, .94); border-right: 1px solid #ffffff0d; }
+.topbar { background: rgba(13, 18, 29, .92); border-bottom-color: #ffffff12; }
+.topbar .breadcrumb { color: #a2adc0; }
+.topbar .breadcrumb strong { color: #e9edf6; }
+.page-title h1 { color: #f5f7ff; text-shadow: 0 2px 16px #0008; }
+.page-title .eyebrow { color: #9eafe0; }
+.page-title p:not(.eyebrow) { color: #b0bbd0; }
+.page-title .step-count { color: #b1bcd1; }
+.page-footer { color: #a3aec2; }
+.panel, .cli-card, .stepper { box-shadow: 0 12px 40px #0002; }
+.context-column > .workspace-note { color: #b1bdd3; }
+@media (max-width: 680px) {
+  .sidebar { background: rgba(13, 18, 29, .95); }
+}
+
+/* Dark workspace surfaces, independent of the original ThreeUI animation. */
+:root {
+  color-scheme: dark;
+  --text: #e2e8f4;
+  --muted: #a0adc3;
+  --line: #2a3549;
+  --bg: #0c111b;
+  --blue: #90a8ff;
+  --green: #72d5b1;
+  --orange: #ebbe76;
+  --red: #f297a9;
+}
+button { background: #1a2435; border-color: #334057; }
+button:hover { background: #253149; border-color: #637cbe; }
+input, select, textarea, .code-input {
+  background: #0e1624;
+  border-color: #36425a;
+  color: #e2e8f4;
+  caret-color: #a9bbff;
+}
+input::placeholder, textarea::placeholder { color: #7f8ea6; }
+input:focus, textarea:focus, select:focus { border-color: #8fa7ff; }
+.panel, .cli-card, .stepper {
+  background: rgba(18, 25, 39, .96);
+  border-color: #2b3549;
+  box-shadow: 0 12px 40px #0003;
+}
+.model-pill { background: #172234; color: #d7e2f6; }
+.stepper b { border-color: #45516a; color: #b2bed2; }
+.stepper button > span { color: #b4bfd3; }
+.stepper small { color: #8f9cb4; }
+.stepper i { background: #303c52; }
+.stepper button.active b { background: #526ff0; border-color: #7e96ff; box-shadow: 0 0 0 4px #526ff024; }
+.stepper button.complete b { background: #153c35; border-color: #286753; color: #83dfbc; }
+.stepper button:disabled { opacity: .6; }
+.primary, .brand-icon { background: #4f6ce5; border-color: #6683f6; color: #fff; }
+.primary:hover { background: #607cf1; border-color: #91a6ff; }
+.mode-option, .example { background: #151f30; border-color: #344057; }
+.mode-option:hover, .example:hover { background: #202e45; }
+.mode-option.selected, .example.selected { background: #253251; border-color: #839aff; color: #b3c3ff; }
+.mode-option small, .example small { color: #a0aec5; }
+.quiet-tag { background: #253147; color: #acbbd4; }
+.blue { color: #a0b8ff; background: #263958; }
+.violet { color: #c1a7ee; background: #342948; }
+.mcp-context, .context-card, .execution-target, .case-body {
+  background: #162235;
+  border-color: #344361;
+}
+.context-title h3, .case-body h3, .execution-target code { color: #adc2f8; }
+.context-card > p, .project-facts, .case-body, .execution-target p,
+.document-label, .execution-list, .case-tools label { color: #a7b7d0; }
+.hint, .cli-card > p, .case-info small, .run-row small, th,
+.count-row > span, .stat span, .report-title p, .empty-state p { color: #a0aec5; }
+.model-advice {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin: 14px 0 0;
+  padding: 9px 12px;
+  border: 1px solid #344361;
+  border-radius: 8px;
+  background: #162235;
+  color: #e2e8f4;
+  font-size: 13px;
+}
+.model-advice span { color: #a8bdff; font-weight: 700; }
+.model-advice strong { color: #f0f3fb; }
+.model-advice small { color: #a0aec5; font-size: 12px; }
+.panel-footer, .dialog-actions, .asset-links, .cli-setup, .case-item,
+.run-row, td, th, .project-facts div:first-child { border-color: #2c3950; }
+.or-divider::before, .or-divider::after { background: #2c3950; }
+.dropzone { background: #101b2d; color: #bdcce5; border-color: #425577; }
+.dropzone:hover, .dropzone.dragging { background: #202e47; border-color: #859bfa; }
+.terminal { background: #0b1321; border-color: #344159; }
+.terminal-bar { border-color: #2b384e; }
+.cli-setup pre, .case-body pre { background: #0d1727; border-color: #31415a; }
+.method { background: #213c5e; color: #a8caff; }
+.stat { border-color: #344159; }
+.stat strong { color: #a8bdff; }
+.stat.pass strong { color: #80dbb9; }
+.stat.fail strong { color: #f6a1b1; }
+.status-badge { color: #b3c1d8; background: #29374f; }
+.status-badge.READY, .status-badge.PASS, .report-title > span { color: #86dfba; background: #1b3c34; }
+.status-badge.NEEDS_RULE, .status-badge.BLOCKED { color: #f0c682; background: #413323; }
+.status-badge.QUARANTINED { color: #d0b6f5; background: #352b4b; }
+.status-badge.FAIL, .status-badge.BROKEN { color: #f7a7b7; background: #442833; }
+.warning-box, .transport-hint { background: #30281e; border-color: #695236; color: #e8c58d; }
+.job-status { background: #1b2c49; border-color: #3c5685; color: #b0c7ff; }
+.job-status.completed { background: #19362e; border-color: #32604e; color: #91d8b4; }
+.job-status.failed, .form-error { background: #3a222e; border-color: #774353; color: #ffadbd; }
+.job-status ul { color: inherit; }
+dialog, .context-menu { background: #151e2e; border-color: #3a4760; box-shadow: 0 24px 90px #0009; }
+dialog::backdrop { background: #03070dbc; backdrop-filter: blur(5px); }
+.dialog-intro, .cli-setup, .interface-advanced summary, #model-test-result { color: #a9bad7; }
+.danger-text { color: #f49aaf !important; }
+.text-button, .icon-button { background: transparent; }
+#toast { background: #273953; border: 1px solid #556987; }
+#toast.error { background: #773548; border-color: #a45369; }
+::selection { background: #5169ae; color: #fff; }
+
+.welcome-panel { border-color: #4a5d8c; background: rgba(27, 40, 64, .96); }
+.welcome-panel > p:not(.eyebrow) { color: #adbbd3; font-size: 13px; margin-top: 10px; }
+.welcome-actions { display: flex; align-items: center; gap: 20px; margin: 18px 0 12px; font-size: 13px; }
+#mcp-prompt { line-height: 1.8; }
+
+/* Selected brand: Orbit, shared with login and browser icons. */
+.brand .brand-icon { background: transparent; border: 0; box-shadow: none; width: 40px; height: 40px; flex: 0 0 40px; }
+.brand-icon img { display: block; width: 100%; height: 100%; }

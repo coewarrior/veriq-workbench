@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "arms": ["baseline", "corrected", "stateful"],
+  "ablation": "corrected fixes omitted submit and visible file selection only; original case-level rule scope, format-first order and volatile recovery remain",
+  "comparison": "frozen incident-policy replay versus a state-aware local executor; no LLM A/B claim",
+  "repeats": 5,
+  "prefix_budget": 6,
+  "scenarios": [
+    {"id":"staged-upload","kind":"staged","cohort":"incident","title":"已选择文件但漏点提交","goals":["uploaded","answered"],"config":{},"source":"真实记录先两次选择文件并以列表未新增判断失败，随后发现缺少上传提交动作。仅回放误判片段；不表示原任务永久失败。"},
+    {"id":"dynamic-scope","kind":"dynamic","cohort":"incident","title":"超过阈值后出现资料选择","goals":["answered"],"config":{"initial":12,"threshold":10},"source":"真实记录在超过10份启用资料后发送禁用，补选范围后恢复。"},
+    {"id":"local-rule","kind":"rules","cohort":"incident","title":"未知规则只影响部分断言","goals":["feedback","original-intact"],"config":{"control":true,"rejectDuplicate":true},"source":"真实设计把重复策略问题绑定整条用例；两组调用同一生产planner。候选组仅把规则依赖下移到policy检查点。"},
+    {"id":"breadth","kind":"breadth","cohort":"incident","title":"格式优先与核心状态优先","goals":["format-0","format-1","format-2","format-3","format-4","format-5","format-6","format-7","format-8","disable","exclude","restore","rename","delete-history","delete-document"],"config":{"control":true},"source":"真实执行连续验证格式，而生命周期和历史管理靠后；此处缩约为相同15项任务，比较前6项与全部完成，不模拟真实解析器。"},
+    {"id":"resume","kind":"resume","cohort":"fault-injection","title":"写入成功后、回写前进程退出","goals":["persisted-evidence","exactly-one"],"config":{},"source":"真实记录存在本地已执行而平台未回写的窗口；进程退出与重启为新增故障注入，不声称原轮发生崩溃。"},
+    {"id":"permission-denied","kind":"denied","cohort":"negative-control","title":"真实缺失权限不能被消除","goals":["legitimate-block"],"config":{"denied":true},"source":"合成负对照：防止靠把所有阻塞改成通过提高指标。"},
+    {"id":"empty-file-defect","kind":"empty-defect","cohort":"negative-control","title":"空文件无反馈必须保留缺陷","goals":["empty-feedback"],"config":{"emptyBug":true},"source":"真实零字节文件有无反馈异常；仿真缺陷用于检查两组是否保留失败，不能由流程恢复掩盖。"},
+    {"id":"variant-threshold","kind":"dynamic","cohort":"variant","title":"阈值变为2份","goals":["answered"],"config":{"initial":3,"threshold":2},"source":"预先指定的合成变体，检查执行器是否硬编码10份。非盲测。"},
+    {"id":"variant-confirmation","kind":"confirmation","cohort":"variant","title":"提交后增加确认对话框","goals":["uploaded","answered"],"config":{"confirmation":true},"source":"预先指定的合成变体。基线已包含提交但未包含新增确认，候选按可见状态完成。非盲测。"}
+  ]
+}

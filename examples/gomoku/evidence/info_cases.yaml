@@ -1,0 +1,64 @@
+﻿positive_cases:
+  - id: "TC-INF-001"
+    name: "登录后正常获取信息"
+    payload:
+      username: "info_user_{uniq}"
+      password: "123456"
+    expected_keys:
+      - "id"
+      - "score"
+      - "total_count"
+      - "username"
+      - "win_count"
+
+  - id: "TC-INF-002"
+    name: "返回数据与登录用户一致"
+    payload:
+      username: "info_match_{uniq}"
+      password: "123456"
+    expected_keys:
+      - "username"
+      - "score"
+      - "total_count"
+      - "win_count"
+    assert_username_match: true
+
+negative_cases:
+  - id: "TC-INF-003"
+    name: "未携带 Cookie"
+    cookie_header: null
+
+  - id: "TC-INF-004"
+    name: "Cookie 中缺少 SSID"
+    cookie_header: "token=123"
+
+  - id: "TC-INF-005"
+    name: "SSID 无效"
+    cookie_header: "SSID=99999999"
+
+  - id: "TC-INF-006"
+    name: "SSID 为空"
+    cookie_header: "SSID="
+
+  - id: "TC-INF-007"
+    name: "Cookie 格式错误"
+    cookie_header: "invalid_format"
+
+  - id: "TC-INF-008"
+    name: "SSID 为非数字"
+    cookie_header: "SSID=abc"
+
+  - id: "TC-INF-009"
+    name: "SSID 为负数"
+    cookie_header: "SSID=-1"
+
+  - id: "TC-INF-010"
+    name: "SSID 为超大值"
+    cookie_header: "SSID=9999999999999999"
+
+security_cases:
+  - id: "TC-INF-011"
+    name: "篡改 SSID 尝试越权访问"
+
+  - id: "TC-INF-012"
+    name: "未登录直接访问"

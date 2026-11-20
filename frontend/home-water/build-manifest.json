@@ -1,0 +1,37 @@
+{
+  "source": "https://threeui.com/source-code/elemental-water.json",
+  "revision": "7a6871fe99fa",
+  "variant": "water",
+  "branding": {
+    "asset": "api_test_tool/static/brand-orbit.svg",
+    "sha256": "e7d96a334e51cb595d2e013fce8ea292709484b9be58abed88b790b3f99812ee"
+  },
+  "registeredFiles": [
+    {
+      "path": "src/shaders/elements/ElementsBackground.tsx",
+      "sha256": "04dfbb5d8e91e71772a34b4f963e2335458c4ffdace33071fa28b731a053ba95"
+    },
+    {
+      "path": "src/shaders/elements/sources/elemental-marks.html",
+      "sha256": "7a6871fe99fa5e1551b27b2601f2a22dd23320ea2c90b5432c9c8e071f0b1d1d"
+    },
+    {
+      "path": "src/shaders/threeui.css",
+      "sha256": "efe4447139f1358dd8e9be68edf6fa46cbefbd1de423a4d6c439ca61d2c8eccf"
+    }
+  ],
+  "outputs": {
+    "water.js.LEGAL.txt": {
+      "bytes": 1241
+    },
+    "water.js": {
+      "bytes": 190429
+    },
+    "fragment-mono.woff2": {
+      "bytes": 15176
+    },
+    "water.css": {
+      "bytes": 29069
+    }
+  }
+}

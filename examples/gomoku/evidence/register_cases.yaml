@@ -1,0 +1,156 @@
+﻿single_request_cases:
+  - id: "TC-REG-001"
+    name: "正常注册新用户"
+    payload:
+      username: "testuser_{uniq}"
+      password: "123456"
+    expected_status: 200
+    expected_json:
+      reason: "用户注册成功！"
+      result: true
+
+  - id: "TC-REG-002"
+    name: "用户名和密码均为 1 字符"
+    use_single_char_user: true
+    payload:
+      password: "1"
+    expected_status: 200
+    expected_json:
+      reason: "用户注册成功！"
+      result: true
+
+  - id: "TC-REG-004"
+    name: "注册空格用户名"
+    payload:
+      username: " "
+      password: "12"
+    expected_status: 200
+    expected_json:
+      reason: "用户注册成功！"
+      result: true
+    allow_external_state_conflict: true
+
+  - id: "TC-REG-005"
+    name: "注册包含特殊字符的用户名"
+    payload:
+      username: "user_{uniq}@#$"
+      password: "123456"
+    expected_status_options:
+      - 200
+      - 400
+    forbid_status:
+      - 500
+
+  - id: "TC-REG-006"
+    name: "注册超长用户名"
+    payload:
+      username: "{long_username}"
+      password: "123456"
+    expected_status_options:
+      - 200
+      - 400
+    forbid_status:
+      - 500
+
+  - id: "TC-REG-007"
+    name: "用户名已存在"
+    setup_duplicate_user: true
+    payload:
+      username: "existing_user_{uniq}"
+      password: "123456"
+    expected_status: 400
+    expected_json:
+      reason: "用户名已被占用！"
+      result: false
+
+  - id: "TC-REG-008"
+    name: "用户名为空"
+    payload:
+      username: ""
+      password: "123456"
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-REG-009"
+    name: "密码为空"
+    payload:
+      username: "newuser_{uniq}"
+      password: ""
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-REG-010"
+    name: "用户名和密码均为空"
+    payload:
+      username: ""
+      password: ""
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-REG-011"
+    name: "缺少 username 字段"
+    payload:
+      password: "123456"
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-REG-012"
+    name: "缺少 password 字段"
+    payload:
+      username: "newuser_{uniq}"
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-REG-013"
+    name: "请求体为空"
+    payload: {}
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-REG-014"
+    name: "Content-Type 错误"
+    raw_body: "username=admin&password=123456"
+    content_type: "text/plain"
+    expected_status: 400
+    expected_json:
+      reason: "正文格式有问题!"
+      result: false
+
+chain_cases:
+  - id: "TC-REG-003"
+    name: "注册后用户可用于后续登录"
+    payload:
+      username: "reg_login_{uniq}"
+      password: "123456"
+    register_expected:
+      status: 200
+      json:
+        reason: "用户注册成功！"
+        result: true
+    login_expected:
+      status: 200
+      json:
+        reason: "用户登录成功！"
+        result: true
+      require_cookie: true
+
+concurrency_cases:
+  - id: "TC-REG-015"
+    name: "并发重复注册同一用户名"
+    payload:
+      username: "dup_{uniq}"
+      password: "123456"
+    success_reason: "用户注册成功！"
+    duplicate_reason: "用户名已被占用！"

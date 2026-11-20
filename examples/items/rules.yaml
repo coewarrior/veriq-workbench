@@ -1,0 +1,243 @@
+schema_version: '1.0'
+title: 资源管理 API 测试报告
+rules:
+  - id: R-SESSION
+    state: documented
+    description: 创建临时 owner 会话成功，得到非空 Token。
+    sources: [{file: openapi.yaml, anchor: '#/paths/~1session/post'}]
+    assertions:
+      - {kind: status, expected: 200}
+      - kind: json_schema
+        expected:
+          type: object
+          required: [token]
+          additionalProperties: false
+          properties:
+            token: {type: string, minLength: 1}
+  - id: R-ITEM-CREATE
+    state: documented
+    description: 合法输入创建成功，结果符合结构且属于当前 owner。
+    sources: [{file: openapi.yaml, anchor: '#/paths/~1items/post/responses/201'}, {file: requirements.md, anchor: '## 创建与查询'}]
+    assertions:
+      - {kind: status, expected: 201}
+      - kind: json_schema
+        expected: &item_schema
+          type: object
+          required: [id, name, quantity, kind, owner]
+          additionalProperties: false
+          properties:
+            id: {type: integer, minimum: 1}
+            name: {type: string, minLength: 1, maxLength: 24}
+            quantity: {type: integer, minimum: 1, maximum: 5}
+            kind: {type: string, enum: [book, tool]}
+            owner: {type: string, minLength: 1}
+      - {kind: equals_variable, pointer: /owner, variable: owner}
+  - id: R-ITEM-NORMAL-VALUES
+    state: documented
+    description: 创建应原样保存本场景提交的 name、quantity、kind。
+    sources: [{file: requirements.md, anchor: '## 创建与查询'}]
+    assertions:
+      - {kind: json_equal, pointer: /name, expected: sample-book}
+      - {kind: json_equal, pointer: /quantity, expected: 2}
+      - {kind: json_equal, pointer: /kind, expected: book}
+  - id: R-ITEM-LOWER-QUANTITY
+    state: documented
+    description: 数量合法下边界 1 应被原样保存。
+    sources: [{file: requirements.md, anchor: '## 创建与查询'}]
+    assertions: [{kind: json_equal, pointer: /quantity, expected: 1}]
+  - id: R-ITEM-UPPER-QUANTITY
+    state: documented
+    description: 数量合法上边界 5 应被原样保存。
+    sources: [{file: requirements.md, anchor: '## 创建与查询'}]
+    assertions: [{kind: json_equal, pointer: /quantity, expected: 5}]
+  - id: R-ITEM-READ
+    state: documented
+    description: 查询结果必须与本场景创建的 ID、字段值和 owner 一致。
+    sources: [{file: openapi.yaml, anchor: '#/paths/~1items~1{id}/get'}, {file: requirements.md, anchor: '## 创建与查询'}]
+    assertions:
+      - {kind: status, expected: 200}
+      - {kind: json_schema, expected: *item_schema}
+      - {kind: equals_variable, pointer: /id, variable: item_id}
+      - {kind: equals_variable, pointer: /owner, variable: owner}
+      - {kind: equals_variable, pointer: /name, variable: created_name}
+      - {kind: equals_variable, pointer: /quantity, variable: created_quantity}
+      - {kind: equals_variable, pointer: /kind, variable: created_kind}
+  - id: R-ITEM-INVALID
+    state: documented
+    description: 字段缺失、null、空值、类型错误、非法枚举和范围外值均明确返回 422。
+    sources: [{file: openapi.yaml, anchor: '#/paths/~1items/post/responses/422'}, {file: requirements.md, anchor: '## 创建与查询'}]
+    assertions:
+      - {kind: status, expected: 422}
+      - {kind: json_equal, pointer: '', expected: {error: invalid_item}}
+  - id: R-ITEM-DUPLICATE
+    state: documented
+    description: 同一 owner 重复提交同名资源返回 409。
+    sources: [{file: openapi.yaml, anchor: '#/paths/~1items/post/responses/409'}]
+    assertions:
+      - {kind: status, expected: 409}
+      - {kind: json_equal, pointer: '', expected: {error: duplicate_name}}
+  - id: R-ITEM-UNAUTHORIZED
+    state: documented
+    description: 缺失 Token 返回 401。
+    sources: [{file: openapi.yaml, anchor: '#/paths/~1items/post/responses/401'}]
+    assertions:
+      - {kind: status, expected: 401}
+      - {kind: json_equal, pointer: '', expected: {error: unauthorized}}
+  - id: R-ITEM-DELETE
+    state: documented
+    description: 删除本用例资源返回 204。
+    sources: [{file: openapi.yaml, anchor: '#/paths/~1items~1{id}/delete'}]
+    assertions: [{kind: status, expected: 204}]
+  - id: R-ITEM-DELETED
+    state: documented
+    description: 清理后再次查询确认资源已不存在。
+    sources: [{file: requirements.md, anchor: '## 清理'}]
+    assertions:
+      - {kind: status, expected: 404}
+      - {kind: json_equal, pointer: '', expected: {error: not_found}}
+profiles:
+  - id: items
+    operation_id: createItem
+    execution_policy:
+      mode: independent
+      reason: 每条用例使用唯一 owner 获取自己的 Token；资源按 owner 隔离，清理只删除本用例创建的资源，不依赖全局计数。
+    variables:
+      owner: {kind: unique, prefix: mvp_items_}
+    request:
+      json: {name: sample-book, quantity: 2, kind: book}
+      headers: {Authorization: 'Bearer ${token}'}
+    setup_steps:
+      - id: session
+        title: 创建临时登录会话
+        operation_id: createSession
+        request: {json: {owner: '${owner}'}}
+        rule_ids: [R-SESSION]
+        extract: [{name: token, from: json, pointer: /token}]
+    generate:
+      - id: ITEM-FLOW-001
+        title: 创建资源、查询并验证重复创建被拒绝
+        scenario: normal
+        rule_ids: [R-ITEM-CREATE, R-ITEM-NORMAL-VALUES]
+        extract: &item_extract
+          - {name: item_id, from: json, pointer: /id}
+          - {name: created_name, from: json, pointer: /name}
+          - {name: created_quantity, from: json, pointer: /quantity}
+          - {name: created_kind, from: json, pointer: /kind}
+        after_steps:
+          - &read_item
+            id: read
+            title: 查询刚创建的资源
+            operation_id: getItem
+            request: {path: '/items/${item_id}', headers: {Authorization: 'Bearer ${token}'}}
+            rule_ids: [R-ITEM-READ]
+          - id: duplicate
+            title: 重复创建同名资源
+            operation_id: createItem
+            request:
+              json: {name: sample-book, quantity: 2, kind: book}
+              headers: {Authorization: 'Bearer ${token}'}
+            rule_ids: [R-ITEM-DUPLICATE]
+        cleanup_steps: &item_cleanup
+          - id: delete
+            title: 删除本用例创建的资源
+            operation_id: deleteItem
+            request: {path: '/items/${item_id}', headers: {Authorization: 'Bearer ${token}'}}
+            rule_ids: [R-ITEM-DELETE]
+          - id: verify_deleted
+            title: 确认资源已删除
+            operation_id: getItem
+            request: {path: '/items/${item_id}', headers: {Authorization: 'Bearer ${token}'}}
+            rule_ids: [R-ITEM-DELETED]
+      - id: ITEM-QUANTITY-LOWER
+        title: 资源数量取下限 1，创建成功
+        titles: {quantity: 资源数量取下限 1，创建成功}
+        scenario: boundary
+        fields: [quantity]
+        values: [1]
+        rule_ids: [R-ITEM-CREATE, R-ITEM-LOWER-QUANTITY]
+        extract: *item_extract
+        after_steps: [*read_item]
+        cleanup_steps: *item_cleanup
+      - id: ITEM-QUANTITY-UPPER
+        title: 资源数量取上限 5，创建成功
+        titles: {quantity: 资源数量取上限 5，创建成功}
+        scenario: boundary
+        fields: [quantity]
+        values: [5]
+        rule_ids: [R-ITEM-CREATE, R-ITEM-UPPER-QUANTITY]
+        extract: *item_extract
+        after_steps: [*read_item]
+        cleanup_steps: *item_cleanup
+      - id: ITEM-MISSING
+        title: 缺少必填字段，拒绝创建
+        titles:
+          name: 缺少资源名称，拒绝创建
+          quantity: 缺少资源数量，拒绝创建
+          kind: 缺少资源类型，拒绝创建
+        scenario: missing
+        fields: [name, quantity, kind]
+        rule_ids: [R-ITEM-INVALID]
+      - id: ITEM-NULL
+        title: 必填字段为 null，拒绝创建
+        titles:
+          name: 资源名称为 null，拒绝创建
+          quantity: 资源数量为 null，拒绝创建
+          kind: 资源类型为 null，拒绝创建
+        scenario: 'null'
+        fields: [name, quantity, kind]
+        rule_ids: [R-ITEM-INVALID]
+      - id: ITEM-EMPTY
+        title: 资源名称为空字符串，拒绝创建
+        titles: {name: 资源名称为空字符串，拒绝创建}
+        scenario: empty
+        fields: [name]
+        rule_ids: [R-ITEM-INVALID]
+      - id: ITEM-WRONG-TYPE
+        title: 字段类型错误，拒绝创建
+        titles:
+          name: 资源名称传入数字，拒绝创建
+          quantity: 资源数量传入字符串，拒绝创建
+          kind: 资源类型传入数字，拒绝创建
+        scenario: wrong_type
+        fields: [name, quantity, kind]
+        rule_ids: [R-ITEM-INVALID]
+      - id: ITEM-BOOL
+        title: 资源数量传入布尔值，拒绝创建
+        titles: {quantity: 资源数量传入布尔值，拒绝创建}
+        scenario: wrong_type
+        fields: [quantity]
+        values: [true]
+        rule_ids: [R-ITEM-INVALID]
+      - id: ITEM-QUANTITY-OUTSIDE
+        title: 资源数量超出范围，拒绝创建
+        titles:
+          quantity-1: 资源数量为 0，低于下限，拒绝创建
+          quantity-2: 资源数量为 6，超过上限，拒绝创建
+        scenario: boundary
+        fields: [quantity]
+        values: [0, 6]
+        rule_ids: [R-ITEM-INVALID]
+      - id: ITEM-NAME-TOO-LONG
+        title: 资源名称超过 24 个字符，拒绝创建
+        titles: {name: 资源名称超过 24 个字符，拒绝创建}
+        scenario: boundary
+        fields: [name]
+        values: ['abcdefghijklmnopqrstuvwxy']
+        rule_ids: [R-ITEM-INVALID]
+      - id: ITEM-KIND-INVALID
+        title: 资源类型不在允许列表内，拒绝创建
+        titles: {kind: 资源类型不在允许列表内，拒绝创建}
+        scenario: invalid_enum
+        fields: [kind]
+        values: [food]
+        rule_ids: [R-ITEM-INVALID]
+  - id: items-no-token
+    operation_id: createItem
+    request:
+      json: {name: anonymous, quantity: 1, kind: tool}
+      session: false
+    generate:
+      - id: ITEM-AUTH-001
+        title: 未提供登录凭证，拒绝创建资源
+        scenario: auth_missing
+        rule_ids: [R-ITEM-UNAUTHORIZED]

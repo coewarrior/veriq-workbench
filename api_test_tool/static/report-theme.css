@@ -1,0 +1,60 @@
+/* Shared with the homepage's signal-theme palette. Printing retains a light page. */
+@media screen {
+  :root {
+    color-scheme: dark;
+    --bg: #0a0a0a;
+    --ink: #e2e8f4;
+    --text: #e2e8f4;
+    --muted: #a0adc3;
+    --line: #2a3549;
+    --blue: #90a8ff;
+    --green: #72d5b1;
+    --orange: #ebbe76;
+    --red: #f297a9;
+  }
+  body { background: #0a0a0a; color: #e2e8f4; }
+  body > header { background: #0d121d; border-bottom: 1px solid #2a3549; }
+  body > main > header, body > main > section, body > main > article,
+  .panel, .case, .kpi {
+    background: rgba(18, 25, 39, .96);
+    border-color: #2b3549;
+    color: #e2e8f4;
+    box-shadow: 0 12px 40px #0003;
+  }
+  h1, h2, h3, h4 { color: #f5f7ff; }
+  a, a:visited, .tag, .method, .facts b { color: #90a8ff; }
+  a:hover { color: #bfcdff; }
+  .muted, small, .copy-status, .draft-preview p, footer { color: #a0adc3; }
+  .demo-notice { margin-bottom: 20px; border-left: 3px solid #ebbe76; }
+  .summary { border-left-color: #90a8ff; }
+  .notice, .case-body { background: #162235; color: #b0bfd6; border-color: #344361; }
+  .basis-summary { background: #111d30; color: #d8e3f3; border: 1px solid #2e3d56; }
+  .basis-summary h4, .basis-summary li { color: #d8e3f3; }
+  .step { background: #121b2b; border-color: #344159; }
+  th { background: #172234; color: #a0aec5; }
+  td, th, .rule { border-color: #2c3950; }
+  .io > div, .source pre { background: #0d1727; color: #d1dcee; }
+  .toolbar input, .toolbar select, .toolbar button, .draft-preview textarea {
+    background: #0e1624;
+    color: #e2e8f4;
+    border-color: #36425a;
+  }
+  .toolbar button:hover { background: #253149; border-color: #637cbe; }
+  input::placeholder, textarea::placeholder { color: #7f8ea6; }
+  input, select, textarea { caret-color: #a9bbff; accent-color: #6683f6; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible,
+  button:focus-visible, summary:focus-visible, a:focus-visible {
+    outline: 2px solid #99b5ff; outline-offset: 3px;
+  }
+  .kpi:hover, .kpi.active { background: #202e45; border-color: #839aff; }
+  .badge { background: #29374f; color: #b3c1d8; }
+  .PASS { background: #1b3c34; color: #86dfba; }
+  .FAIL, .BROKEN { background: #442833; color: #f7a7b7; }
+  .BLOCKED, .NEEDS_RULE { background: #413323; color: #f0c682; }
+  .QUARANTINED { background: #352b4b; color: #d0b6f5; }
+  .defect-draft { background: #162235; border-color: #344361; color: #e2e8f4; }
+  .copy-defect { background: #4f6ce5; border-color: #6683f6; color: #fff; }
+  .copy-defect:hover { background: #607cf1; border-color: #91a6ff; }
+  .draft-preview summary { color: #adc2f8; }
+  ::selection { background: #5169ae; color: #fff; }
+}

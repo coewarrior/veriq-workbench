@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Disposable Items API — configuration onboarding proof
+  version: '1.0.0'
+  description: >-
+    A local test contract written independently of the executor. All data is
+    temporary. Response expectations come from this contract and requirements.md.
+servers:
+  - url: http://127.0.0.1:18082
+paths:
+  /session:
+    post:
+      operationId: createSession
+      summary: Create a temporary owner session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [owner]
+              properties:
+                owner: {type: string, minLength: 1}
+            example: {owner: demo_owner}
+      responses:
+        '200':
+          description: A new token for the specified owner
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token]
+                additionalProperties: false
+                properties:
+                  token: {type: string, minLength: 1}
+        '422':
+          description: Missing, empty, null or non-string owner
+  /items:
+    post:
+      operationId: createItem
+      summary: Create an item owned by the authenticated owner
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, quantity, kind]
+              additionalProperties: false
+              properties:
+                name: {type: string, minLength: 1, maxLength: 24}
+                quantity: {type: integer, minimum: 1, maximum: 5}
+                kind: {type: string, enum: [book, tool]}
+            example: {name: sample-book, quantity: 2, kind: book}
+      responses:
+        '201':
+          description: Created item with server-assigned ID and authenticated owner
+          content:
+            application/json:
+              schema: &item_schema
+                type: object
+                required: [id, name, quantity, kind, owner]
+                additionalProperties: false
+                properties:
+                  id: {type: integer, minimum: 1}
+                  name: {type: string, minLength: 1, maxLength: 24}
+                  quantity: {type: integer, minimum: 1, maximum: 5}
+                  kind: {type: string, enum: [book, tool]}
+                  owner: {type: string, minLength: 1}
+        '401':
+          description: Authorization header absent or Bearer token unknown
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                additionalProperties: false
+                properties:
+                  error: {type: string, enum: [unauthorized]}
+        '409':
+          description: Name already exists for the authenticated owner
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                additionalProperties: false
+                properties:
+                  error: {type: string, enum: [duplicate_name]}
+        '422':
+          description: >-
+            Missing or null required fields, empty name, wrong JSON field types,
+            unknown kind, additional fields, or values outside schema bounds.
+            The JSON response is exactly {"error":"invalid_item"}.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                additionalProperties: false
+                properties:
+                  error: {type: string, enum: [invalid_item]}
+  /items/{id}:
+    get:
+      operationId: getItem
+      summary: Read an item owned by the authenticated owner
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer, minimum: 1}
+      responses:
+        '200':
+          description: The stored item; all submitted values and owner must be unchanged
+          content:
+            application/json:
+              schema: *item_schema
+        '401':
+          description: Missing or invalid Bearer token
+        '404':
+          description: Item does not exist or belongs to a different owner
+    delete:
+      operationId: deleteItem
+      summary: Delete an item owned by the authenticated owner
+      security: [{bearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer, minimum: 1}
+      responses:
+        '204':
+          description: Item deleted; response body is empty
+        '401':
+          description: Missing or invalid Bearer token
+        '404':
+          description: Item does not exist or belongs to a different owner
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

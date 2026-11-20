@@ -1,0 +1,154 @@
+/* Workspace management and identity share one compact sidebar footer. */
+.sidebar { min-height: 0; height: 100dvh; }
+.sidebar .project-list {
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #3b4b65 transparent;
+}
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top-color: #2b3649;
+}
+.sidebar-management { display: grid; gap: 4px; }
+.sidebar-bottom .sidebar-management .sidebar-action {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  margin: 0;
+  padding: 9px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #b5c2d7;
+  text-align: left;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  transition: color .15s, background .15s, border-color .15s;
+}
+.sidebar-bottom .sidebar-management .sidebar-action:hover {
+  background: #1b283e;
+  border-color: #31435f;
+  color: #edf3ff;
+}
+.sidebar-bottom .sidebar-management .sidebar-action.active {
+  background: #233451;
+  border-color: #3c537d;
+  color: #d3dfff;
+}
+.sidebar-action-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: #8c9fbe;
+}
+.sidebar-action-label { white-space: nowrap; }
+.sidebar-action-trailing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #7185a4;
+  font-size: 18px;
+  font-weight: 400;
+}
+.sidebar-action-meta { font-size: 10px; color: #7f93b1; }
+#sidebar-account:empty { display: none; }
+.account-bar {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 30px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #2d3b53;
+  border-radius: 10px;
+  background: #152033;
+  color: #dce6f8;
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.account-avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: #2b3d60;
+  color: #bbcdff;
+  font-size: 14px;
+  font-weight: 650;
+}
+.account-identity { display: grid; gap: 3px; min-width: 0; }
+.account-label { color: #8c9db7; font-size: 10px; }
+.account-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+}
+.account-bar .account-logout,
+.sidebar-bottom .account-bar .account-logout {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 30px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #9dafca;
+  cursor: pointer;
+  transition: color .15s, background .15s;
+}
+.account-bar .account-logout:hover { color: #ffbac8; background: #382938; }
+.account-bar .account-logout:focus-visible { outline: 2px solid #9baef4; outline-offset: 2px; }
+.account-bar .account-logout:disabled { opacity: .45; cursor: wait; }
+.account-logout svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.account-bar-floating {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 50;
+  width: min(240px, calc(100vw - 32px));
+  box-shadow: 0 8px 24px #0005;
+}
+@media (max-width: 680px) {
+  .sidebar { height: auto; }
+  .sidebar-bottom { display: flex; margin-top: 18px; padding-top: 12px; gap: 10px; }
+  .sidebar-management { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .sidebar-bottom .sidebar-management .sidebar-action {
+    grid-template-columns: 18px minmax(0, 1fr);
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 6px;
+    font-size: 12px;
+  }
+  .sidebar-action-trailing { display: none; }
+  .account-bar { padding: 8px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-action, .account-bar .account-logout { transition: none; }
+}

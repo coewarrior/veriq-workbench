@@ -1,0 +1,237 @@
+--- a/source/util.hpp
++++ b/source/util.hpp
+@@ -26,13 +26,22 @@
+     unsigned int port)   // MySQL服务端口号（默认3306）
+     {
+         MYSQL* myfd = mysql_init(NULL);
++        if (!myfd) return nullptr;
++        unsigned int timeout = 5;
++        mysql_options(myfd, MYSQL_OPT_CONNECT_TIMEOUT, &timeout);
++        mysql_options(myfd, MYSQL_OPT_READ_TIMEOUT, &timeout);
++        mysql_options(myfd, MYSQL_OPT_WRITE_TIMEOUT, &timeout);
+         if(!mysql_real_connect(myfd, host.c_str(), user.c_str(), 
+         passwd.c_str(), db.c_str(), port, NULL, 0))
+         {
+             ELOG("connect fail: %s\n", mysql_error(myfd));
++            mysql_close(myfd);
+             return nullptr;
+         }
+-        mysql_set_character_set(myfd, "utf8");
++        if (mysql_set_character_set(myfd, "utf8") != 0) {
++            mysql_close(myfd);
++            return nullptr;
++        }
+         return myfd;
+     }
+ 
+@@ -49,7 +58,7 @@
+ 
+     static void mysql_destory(MYSQL* myfd)
+     {
+-        if(!myfd)
++        if(myfd)
+             mysql_close(myfd);
+         return;
+     }
+--- a/source/db.hpp
++++ b/source/db.hpp
+@@ -10,6 +10,29 @@
+ private:
+     MYSQL* _mysql;
+     std::mutex _mutex;
++    std::string _host, _user, _password, _db;
++    uint16_t _port;
++
++    // Called under _mutex, before sending SQL. Never replay a failed write:
++    // a lost response does not prove the write was not committed.
++    bool execute_locked(const std::string& sql, bool* database_error = nullptr)
++    {
++        if (!_mysql || mysql_ping(_mysql) != 0) {
++            mysql_util::mysql_destory(_mysql);
++            _mysql = mysql_util::mysql_create(_host, _user, _password, _db, _port);
++            if (!_mysql) {
++                if (database_error) *database_error = true;
++                return false;
++            }
++            DLOG("Database connection re-established before query");
++        }
++        if (!mysql_util::mysql_exct(_mysql, sql)) {
++            // 1062 is an actual uniqueness conflict, not a connection failure.
++            if (database_error) *database_error = mysql_errno(_mysql) != 1062;
++            return false;
++        }
++        return true;
++    }
+ public:
+     user_table(
+         const std::string host,
+@@ -17,7 +40,7 @@
+         const std::string password,
+         const std::string db,
+         uint16_t port
+-    )
++    ) : _mysql(nullptr), _host(host), _user(user), _password(password), _db(db), _port(port)
+     {
+         _mysql = mysql_util::mysql_create(host, user, password, db, port);
+         assert(_mysql);
+@@ -28,8 +51,9 @@
+         _mysql = nullptr;
+     }
+ 
+-    bool insert(Json::Value& val)
+-    {
++    bool insert(Json::Value& val, bool* database_error = nullptr)
++    {
++        if (database_error) *database_error = false;
+ #define INSERT "insert into user values(null, '%s', SHA1('%s'), 1000, 0, 0)"
+         if(val["username"].asString().empty() || val["password"].asString().empty())
+         {
+@@ -41,7 +65,7 @@
+         
+         {
+             std::unique_lock<std::mutex> mx(_mutex);
+-            bool ret = mysql_util::mysql_exct(_mysql, buf);
++            bool ret = execute_locked(buf, database_error);
+             if(!ret)
+             {   
+                 ELOG("insert %s false", val["username"].asString().c_str());
+@@ -51,8 +75,9 @@
+         return true;
+     }
+ 
+-    bool login(Json::Value& val)
+-    {
++    bool login(Json::Value& val, bool* database_error = nullptr)
++    {
++        if (database_error) *database_error = false;
+ #define LOGIN "select id, score, total_count, win_count from user where username='%s' and password=SHA1('%s')"
+         if(val["username"].asString().empty() || val["password"].asString().empty())
+         {
+@@ -65,7 +90,7 @@
+         MYSQL_RES* res = nullptr;
+         {
+             std::unique_lock<std::mutex> mx(_mutex);
+-            bool ret = mysql_util::mysql_exct(_mysql, buf);
++            bool ret = execute_locked(buf, database_error);
+             if(!ret)
+             {   
+                 ELOG("select %s false", val["username"].asString().c_str());
+@@ -76,7 +101,7 @@
+             if(!res)
+             {
+                 ELOG("select %s false", val["username"].asString().c_str());
+-                mysql_free_result(res);
++                if (database_error) *database_error = true;
+                 return false;
+             }
+         }
+@@ -109,7 +134,7 @@
+         MYSQL_RES* res = nullptr;
+         {
+             std::unique_lock<std::mutex> mx(_mutex);
+-            bool ret = mysql_util::mysql_exct(_mysql, buf);
++            bool ret = execute_locked(buf);
+             if(!ret)
+             {   
+                 ELOG("select %s false", val["username"].asString().c_str());
+@@ -145,8 +170,9 @@
+         return true;
+     }
+ 
+-    bool select_by_id(Json::Value& val, int uid)
+-    {
++    bool select_by_id(Json::Value& val, int uid, bool* database_error = nullptr)
++    {
++        if (database_error) *database_error = false;
+ #define SELECT_BY_ID "select username, score, total_count, win_count from user where id='%d'"
+         char buf[4096];
+         snprintf(buf, sizeof(buf) - 1, SELECT_BY_ID, uid);
+@@ -154,7 +180,7 @@
+         MYSQL_RES* res = nullptr;
+         {
+             std::unique_lock<std::mutex> mx(_mutex);
+-            bool ret = mysql_util::mysql_exct(_mysql, buf);
++            bool ret = execute_locked(buf, database_error);
+             if(!ret)
+             {   
+                 ELOG("select %s false", val["username"].asString().c_str());
+@@ -165,7 +191,7 @@
+             if(!res)
+             {
+                 ELOG("select %s false", val["username"].asString().c_str());
+-                mysql_free_result(res);
++                if (database_error) *database_error = true;
+                 return false;
+             }
+         }
+@@ -197,7 +223,7 @@
+         snprintf(buf, sizeof(buf) - 1, WIN, uid);
+         {
+             std::unique_lock<std::mutex> mx(_mutex);
+-            bool ret = mysql_util::mysql_exct(_mysql, buf);
++            bool ret = execute_locked(buf);
+             if(!ret)
+             {   
+                 ELOG("updata %d false", uid);
+@@ -214,7 +240,7 @@
+         snprintf(buf, sizeof(buf) - 1, LOSE, uid);
+         {
+             std::unique_lock<std::mutex> mx(_mutex);
+-            bool ret = mysql_util::mysql_exct(_mysql, buf);
++            bool ret = execute_locked(buf);
+             if(!ret)
+             {   
+                 ELOG("updata %d false", uid);
+--- a/source/server.hpp
++++ b/source/server.hpp
+@@ -74,9 +74,13 @@
+             return http_resp(conn, false, "请输入账号/密码", websocketpp::http::status_code::value::bad_request);
+         }
+ 
+-        ret = _ut.insert(req_val);
+-        if(!ret)
+-        {
++        bool database_error = false;
++        ret = _ut.insert(req_val, &database_error);
++        if(!ret)
++        {
++            if (database_error) {
++                return http_resp(conn, false, "数据库暂不可用，请稍后重试", websocketpp::http::status_code::service_unavailable);
++            }
+             ELOG("数据插入失败!");
+             return http_resp(conn, false, "用户名已被占用！", websocketpp::http::status_code::value::bad_request);
+         }
+@@ -100,9 +104,13 @@
+             return http_resp(conn, false, "请输入账号/密码", websocketpp::http::status_code::value::bad_request);
+         }
+ 
+-        ret = _ut.login(req_val);
+-        if(!ret)
+-        {
++        bool database_error = false;
++        ret = _ut.login(req_val, &database_error);
++        if(!ret)
++        {
++            if (database_error) {
++                return http_resp(conn, false, "数据库暂不可用，请稍后重试", websocketpp::http::status_code::service_unavailable);
++            }
+             ELOG("数据查询失败");
+             return http_resp(conn, false, "账号/密码错误!", websocketpp::http::status_code::value::bad_request);
+         }
+@@ -176,9 +184,13 @@
+ 
+         int uid = ssp->get_uid();
+         Json::Value resp_val;
+-        ret = _ut.select_by_id(resp_val, uid);
+-        if(!ret)
+-        {
++        bool database_error = false;
++        ret = _ut.select_by_id(resp_val, uid, &database_error);
++        if(!ret)
++        {
++            if (database_error) {
++                return http_resp(conn, false, "数据库暂不可用，请稍后重试", websocketpp::http::status_code::service_unavailable);
++            }
+             ELOG("找不到用户：%d的信息，请重新登录！", uid);
+             http_resp(conn, false, "找不到用户的信息，请重新登录！", websocketpp::http::status_code::value::bad_request);
+             return;

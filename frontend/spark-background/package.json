@@ -1,0 +1,12 @@
+{
+  "name": "api-test-workspace-spark-background",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build.mjs" },
+  "dependencies": {
+    "@designcodeio/threeui": "file:vendor/threeui",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": { "esbuild": "0.25.12" }
+}

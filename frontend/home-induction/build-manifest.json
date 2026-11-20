@@ -1,0 +1,56 @@
+{
+  "source": "https://threeui.com/source-code/induction-button.json",
+  "revision": "6f56c4f91814",
+  "variant": "induction-button",
+  "registeredFiles": [
+    {
+      "path": "src/shaders/neuform-isolated/NeuformIsolatedEffects.tsx",
+      "sha256": "fe9856234253bc3c1a13b3afb84f3d84644dfa6d578e7203bb3e1dd5eced1b75"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/valence-core.html",
+      "sha256": "26b21d4972805733a2441355edb56576fa911f135ccf746ebcc927a0b1e3b975"
+    },
+    {
+      "path": "src/shaders/threeui.css",
+      "sha256": "efe4447139f1358dd8e9be68edf6fa46cbefbd1de423a4d6c439ca61d2c8eccf"
+    }
+  ],
+  "runtimeAssets": [
+    {
+      "file": "gsap-3.12.2.min.js",
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js",
+      "resolved_url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js",
+      "sha256": "efc85c7eb141819717cda0033484a84b1c890d13b02e355a2fec79d424b20e7a",
+      "bytes": 71520
+    },
+    {
+      "file": "iconify-icon-1.0.7.min.js",
+      "url": "https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js",
+      "resolved_url": "https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js",
+      "sha256": "851bed7af266f96a0be3edf9918daab48d8da4ce17c46040511bae450caf3dd6",
+      "bytes": 22003
+    },
+    {
+      "file": "tailwindcss.js",
+      "url": "https://cdn.tailwindcss.com",
+      "resolved_url": "https://cdn.tailwindcss.com/3.4.17",
+      "sha256": "176e894661aa9cdc9a5cba6c720044cbbf7b8bd80d1c9a142a7c24b1b6c50d15",
+      "bytes": 407279
+    }
+  ],
+  "outputs": {
+    "induction.js.LEGAL.txt": {
+      "bytes": 1241
+    },
+    "induction.js": {
+      "bytes": 203314
+    },
+    "fragment-mono.woff2": {
+      "bytes": 15176
+    },
+    "induction.css": {
+      "bytes": 29069
+    }
+  }
+}

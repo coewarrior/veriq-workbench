@@ -1,0 +1,124 @@
+{
+  "source": "https://threeui.com/source-code/predictive-arc.json",
+  "revision": "fa86582fc870",
+  "variant": "signal-particles",
+  "runtimeAssets": [
+    {
+      "file": "gsap-3.12.2.min.js",
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js",
+      "resolved_url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js",
+      "sha256": "efc85c7eb141819717cda0033484a84b1c890d13b02e355a2fec79d424b20e7a",
+      "bytes": 71520
+    },
+    {
+      "file": "ScrollTrigger-3.12.2.min.js",
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js",
+      "resolved_url": "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js",
+      "sha256": "65f6c13748b0c8d8f9eabd0373a130ac293b3f16bf34aaa946d953980372b932",
+      "bytes": 42667
+    },
+    {
+      "file": "iconify-icon-1.0.7.min.js",
+      "url": "https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js",
+      "resolved_url": "https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js",
+      "sha256": "851bed7af266f96a0be3edf9918daab48d8da4ce17c46040511bae450caf3dd6",
+      "bytes": 22003
+    },
+    {
+      "file": "tailwindcss.js",
+      "url": "https://cdn.tailwindcss.com",
+      "resolved_url": "https://cdn.tailwindcss.com/3.4.17",
+      "sha256": "176e894661aa9cdc9a5cba6c720044cbbf7b8bd80d1c9a142a7c24b1b6c50d15",
+      "bytes": 407279
+    }
+  ],
+  "registeredFiles": [
+    {
+      "path": "src/shaders/predictive-arc/PredictiveArcCollection.tsx",
+      "sha256": "b77a845ab2fa8e8ef8d9b6812d71efe6f320d865d97ec97b2e15253b5950fd63"
+    },
+    {
+      "path": "src/shaders/predictive-arc/PredictiveArcCanvas.tsx",
+      "sha256": "ebaa5a1b1f785c7772aaedc2b195318fd63bd9c3e5e5d8e175600968b245dae7"
+    },
+    {
+      "path": "src/shaders/predictive-arc/predictiveArcRenderer.ts",
+      "sha256": "fc08c66b13c4a8173c8a88845926b72266d1b1a4fc345c84f44ee61fbfaba92b"
+    },
+    {
+      "path": "src/shaders/data-pixel-arc/DataPixelArcCanvas.tsx",
+      "sha256": "2e25156d43dfd1bf0fb47384f75df240cd0c4038deae75a8dacae7c213269c5b"
+    },
+    {
+      "path": "src/shaders/data-pixel-arc/dataPixelArcRenderer.ts",
+      "sha256": "65bdfb98424996d935923f39f163e1667f0bc2b8faa458d900f4450beabba0eb"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/NeuformBatchEffects.tsx",
+      "sha256": "dc68c51bea26b922965de44b4fb8d6c432607508fb2b61e16ed60d245da1a69f"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/amber-halftone.html",
+      "sha256": "3d9ebb64a15a1985c4cef1f01457281a49b2d9900405fd674e8748cac8af00a0"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/signal-particles.html",
+      "sha256": "613a2005d18795dbc25a5d0f93c3ae4dfecdfcb939ea6e2c5702b82eb1e4bfff"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/override-grid.html",
+      "sha256": "dc7800f2b6b6329b8b71ea4a06b82af91cff8379701c6a7fa4c9a92d47f89d6c"
+    },
+    {
+      "path": "src/shaders/ribbon-field/RibbonFieldBackground.tsx",
+      "sha256": "fab02cb57c44c7307afd29cd03d01141372ad90163632b9a6a77910a245a5996"
+    },
+    {
+      "path": "src/shaders/ribbon-field/ribbonFieldShaders.ts",
+      "sha256": "ab578acab44bbff7f3cf67f1c82b3e2e1d03689de3fcbdc23681e8b5a0a3536c"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/NeuformIsolatedEffects.tsx",
+      "sha256": "fe9856234253bc3c1a13b3afb84f3d84644dfa6d578e7203bb3e1dd5eced1b75"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/void-protocol.html",
+      "sha256": "affd21553ba951c0ff0f5a8e40a84ae70d49aaff3c4c69ea4ae1ec897dec21e3"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/NeuformCraftEffects.tsx",
+      "sha256": "0a1680c3c119dba8c61d946322afa0b64d36dfd80956fb5e7c3fd017d7bfa450"
+    },
+    {
+      "path": "src/shaders/neuform-isolated/sources/nexus-unified-flow.html",
+      "sha256": "fa1a015ae407dc2091c3c96239d28107e973cbc03aa7abef37dd5da791d5428b"
+    },
+    {
+      "path": "src/shaders/threeui.css",
+      "sha256": "efe4447139f1358dd8e9be68edf6fa46cbefbd1de423a4d6c439ca61d2c8eccf"
+    }
+  ],
+  "outputs": {
+    "background.js.LEGAL.txt": {
+      "bytes": 635
+    },
+    "background.js": {
+      "bytes": 141242
+    },
+    "NeuformBatchEffects-ZT43XPS4.js": {
+      "bytes": 347348
+    },
+    "chunk-6TVPDF6I.js.LEGAL.txt": {
+      "bytes": 635
+    },
+    "chunk-6TVPDF6I.js": {
+      "bytes": 7785
+    },
+    "fragment-mono.woff2": {
+      "bytes": 15176
+    },
+    "background.css": {
+      "bytes": 29069
+    }
+  }
+}

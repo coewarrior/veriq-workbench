@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>交给 Codex · 测试工作台</title>
+  <link rel="stylesheet" href="/static/help.css">
+  <link rel="stylesheet" href="/static/shared-glass.css">
+  <link rel="stylesheet" href="/static/controls.css">
+</head>
+<body><article>
+  <a href="/api-testing">← 返回 API 测试</a>
+  <p class="eyebrow">CODEX · MCP</p>
+  <h1>复制一段消息，让 Codex 完成任务</h1>
+  <p>无需先下载项目源码。接入消息包含服务器地址、会话、任务目标、连接码和免安装客户端说明。</p>
+  <ol>
+    <li>从测试工作台进入「API 测试」，在网页保存接口文档，进入「任务目标」，选择「使用 Codex · MCP」。</li>
+    <li>写明目标：完整接口测试，或只检查文档。需要真实测试时，在导入文档步骤核对并保存自动识别的 Base URL；只检查文档可以留空。</li>
+    <li>点击「交给 Codex 完成任务」，直接复制弹窗消息，发给能访问内网的 Codex。</li>
+    <li>Codex 读取文档并完成任务，最后给出报告链接；当前网页自动同步结果。</li>
+  </ol>
+  <h2>内置接口测试 Skill</h2>
+  <p>当前为灵活测试 Skill 2.1：每个接口至少展开正向、逆向、边界和安全四类具体场景，再由 Codex 根据业务分支、状态、依赖、数据影响和风险主动扩充。四类不是固定四条用例，也不要求填写机械的维度表。报告展示真实执行结果、覆盖内容与剩余缺口；通过率不代表覆盖程度。接入消息和 MCP 上下文会直接提供规则，首次使用无需额外安装。</p>
+  <p><a href="/static/skills/api-test-workspace/SKILL.md">查看接口测试 Skill</a> · <a href="/static/api-test-workspace-skill.zip" download>下载 Skill 完整包</a></p>
+  <h2>第一次使用也能继续</h2>
+  <p>已安装 MCP 的 Codex 直接调用工具。未安装时，消息会指引 Codex 下载免安装 Python 客户端，用相同工具完成本次任务，再按需配置长期 MCP。无需你手动找命令或重启后重新描述任务。</p>
+  <p>Codex 所在电脑需要能访问本测试台，并具备终端执行权限；免安装客户端需要 Python 3.9+。浏览器不能代替用户登录 Codex，也不会在网页后台使用某个人的 Codex 账号。</p>
+  <h2>连接与会话</h2>
+  <p>侧栏「Codex 连接」只连接工作空间，不自动选中历史文档。你也可以连接后直接在 Codex 提供文档和目标。</p>
+  <p>每次复制的新消息带一次性连接码，10 分钟有效。新连接不会使已有 Codex 失效；连接管理可以撤销全部授权。连接码不要公开转发。</p>
+  <h2>结果保存在哪里</h2>
+  <p>资料保存在服务器并按登录账号隔离。完整报告链接可在内网免登录只读查看；项目、原文、原始 JSON、配置和提交操作仍需登录。请只把报告链接发给需要查看的人。</p>
+  <p>Codex 使用自己的额度，不调用网页中保存的模型 API。文档检查可以直接出报告；只有明确需要并授权的接口测试才发送真实请求。</p>
+  <div class="links"><a href="/static/agent-guide.md">给 Codex 的执行说明</a><a href="/static/api-test-client.py" download>下载免安装客户端</a><a href="/static/agent-tools.json">工具格式</a></div>
+</article></body>
+</html>

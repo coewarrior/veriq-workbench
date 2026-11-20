@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17243d">
+  <title>API 测试 · 探真 VERIQ</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/signal-theme.css">
+  <link rel="stylesheet" href="/static/workspace-glass.css">
+  <link rel="stylesheet" href="/static/account-bar.css">
+  <script src="/static/codex-progress.js" defer></script><link rel="stylesheet" href="/static/managed-workflow.css"><script src="/static/browser-console.js" defer></script><script src="/static/project-account-editor.js" defer></script><script src="/static/project-accounts.js" defer></script><script src="/static/managed-workflow.js" defer></script><script src="/static/ui-workflow.js" defer></script><script src="/static/requirements-workflow.js" defer></script><link rel="stylesheet" href="/static/requirements-workflow.css"><script src="/static/workspace-integrations.js" defer></script><script src="/static/app.js" defer></script><script src="/static/wecom.js" defer></script><script src="/static/workflow-tools.js" defer></script><script src="/static/manual-cases.js" defer></script><link rel="stylesheet" href="/static/workflow-tools.css">
+<script src="/static/account-bar.js" defer></script><link rel="icon" type="image/svg+xml" href="/static/favicon-orbit.svg"><link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-orbit-32.png"><link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon-orbit.png"><link rel="stylesheet" href="/static/pingcode.css"><link rel="stylesheet" href="/static/workspace-integrations.css"><link rel="stylesheet" href="/static/shared-glass.css"><link rel="stylesheet" href="/static/controls.css"><link rel="stylesheet" href="/static/workspace-density.css"><link rel="stylesheet" href="/static/ui-flow.css"><link rel="stylesheet" href="/static/workspace-loading.css"></head>
+<body>
+<iframe id="signal-background-frame" referrerpolicy="no-referrer" src="/static/signal-background/frame.html" title="Signal Particles 动态背景" aria-hidden="true" tabindex="-1"></iframe>
+<dialog id="mcp-dialog" aria-labelledby="mcp-title">
+  <div class="panel-heading"><h2 id="mcp-title">授权 Codex 访问测试台</h2><button id="close-mcp" aria-label="关闭连接窗口">×</button></div>
+  <p id="mcp-intro"></p>
+  <div id="mcp-authorization-help" class="mcp-context" hidden>
+    <strong>授权后，选择一种方式开始</strong>
+    <p><b>直接给 Codex 文档：</b>把接口文档和测试目标发给 Codex，它会导入文档、创建新会话，并将报告保存到该会话。</p>
+    <p><b>使用网页中的会话：</b>导入文档或打开已有会话，点击「交给 Codex 完成任务」，把生成的消息发给 Codex。消息包含准确的会话编号。</p>
+    <p class="hint">Codex 不会自动跟随网页当前选中的会话。直接告诉它会话名称也可以；遇到同名会话，会先向你确认。</p>
+  </div>
+  <div id="mcp-target" class="mcp-context" hidden></div>
+  <p id="mcp-status" class="hint" role="status"></p>
+  <p id="mcp-next" class="hint"></p>
+  <p class="hint">消息中已包含免安装接入方法，Codex 可直接读取并执行。<a href="/static/mcp-guide.html" target="_blank" rel="noopener">接入说明 ↗</a></p>
+  <button class="primary" id="pair-mcp">生成连接码</button>
+  <div id="mcp-message" hidden><details id="mcp-task-details" open><summary>查看完整任务消息</summary><label for="mcp-prompt" id="mcp-prompt-label">把连接消息发给 Codex</label><textarea id="mcp-prompt" readonly rows="6"></textarea></details><div class="mcp-copy-actions"><button id="copy-mcp">复制消息</button><span id="mcp-copy-feedback" class="mcp-copy-feedback" role="status" aria-live="polite"></span></div></div>
+  <p class="hint">连接范围：当前账号下的测试会话与报告。连接码 10 分钟内有效、仅可用一次；新连接不会挤掉已有连接，请勿公开。</p>
+  <p class="hint">Codex 执行任务使用其自身额度，不调用已配置的模型 API。</p>
+  <div class="panel-footer"><button id="revoke-mcp">断开 Codex</button><button id="refresh-mcp">刷新连接状态</button></div>
+</dialog>
+
+<div id="session-menu" class="context-menu" role="menu" aria-label="会话操作" hidden><button id="rename-session" role="menuitem">重命名</button><button id="delete-session" class="danger-text" role="menuitem">删除会话</button><small>删除后可在回收站恢复</small></div>
+<dialog id="rename-dialog" aria-labelledby="rename-title"><form id="rename-form"><div class="dialog-heading"><h2 id="rename-title">重命名会话</h2><button type="button" data-close-dialog="rename-dialog" aria-label="关闭重命名">×</button></div><label for="rename-input">会话名称<input id="rename-input" required maxlength="120" autocomplete="off"></label><p id="rename-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" data-close-dialog="rename-dialog">取消</button><button id="confirm-rename" type="submit" class="primary">保存名称</button></div></form></dialog>
+<dialog id="trash-dialog" aria-labelledby="trash-title"><div class="dialog-heading"><h2 id="trash-title">会话回收站</h2><button data-close-dialog="trash-dialog" aria-label="关闭回收站">×</button></div><p class="hint">会话可恢复；彻底删除后，关联文档、用例和报告将无法找回。已推送到 PingCode 的缺陷不受影响。</p><div class="trash-toolbar"><label><input type="checkbox" id="trash-select-all"> 全选</label><span id="trash-selection-count" aria-live="polite">已选 0 个</span><button id="purge-selected" class="danger-text" disabled>删除所选</button><button id="empty-trash" class="danger-text" disabled>清空回收站</button></div><div id="trash-list"></div><p id="trash-error" class="form-error" role="alert" hidden></p></dialog>
+<dialog id="purge-dialog" aria-labelledby="purge-title"><div class="dialog-heading"><h2 id="purge-title">确认彻底删除</h2><button data-close-dialog="purge-dialog" aria-label="取消彻底删除">×</button></div><p id="purge-summary"></p><ul id="purge-names"></ul><p class="hint">将永久清除所选会话的接口文档、用例、执行记录和报告，无法恢复。不会删除已推送到 PingCode 的缺陷。</p><p id="purge-error" class="form-error" role="alert" hidden></p><div class="trash-actions"><button data-close-dialog="purge-dialog">取消</button><button id="confirm-purge" class="danger-button">彻底删除</button></div></dialog>
+<dialog id="interface-dialog" aria-labelledby="interface-title"><form id="interface-form">
+<div class="dialog-heading"><h2 id="interface-title">新增接口</h2><button type="button" data-close-dialog="interface-dialog" aria-label="关闭接口设置">×</button></div>
+<p class="hint">填写本次会话的接口配置。未确定的参数和预期可以留空。</p><p id="interface-edit-hint" class="hint" hidden>预期状态码展示首个成功响应；有多个响应时只修改此项，其他响应和鉴权配置保留。</p>
+<label>接口名称<input id="interface-name" required maxlength="200" placeholder="例如：查询用户信息"></label>
+<div class="form-row"><label>请求方法<select id="interface-method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option></select></label><label>接口路径<input id="interface-path" required maxlength="2000" placeholder="/users/{id}"></label></div>
+<label>接口说明（可选）<textarea id="interface-description" rows="2" maxlength="12000" placeholder="接口用途、业务规则或前置条件"></textarea></label>
+<label>请求体示例（JSON，可选）<textarea id="interface-request" class="code-input" rows="3" spellcheck="false" placeholder='{"name":"测试用户"}'></textarea></label>
+<div class="form-row"><label>预期状态码（可选）<input id="interface-status" type="number" min="100" max="599" step="1" placeholder="例如：200"></label></div>
+<label>预期响应示例（JSON，可选）<textarea id="interface-response" class="code-input" rows="3" spellcheck="false" placeholder='{"id":1,"name":"测试用户"}'></textarea></label>
+<details class="interface-advanced"><summary>参数与请求体结构（可选）</summary><label>参数（JSON 数组）<textarea id="interface-parameters" class="code-input" rows="4" spellcheck="false" placeholder='[{"name":"page","in":"query","required":false,"schema":{"type":"integer"},"example":1}]'></textarea></label><p class="hint">in 支持 query、path、header、cookie。路径中的 {参数名} 会自动补为必填参数。</p><label>请求体 Schema（JSON）<textarea id="interface-schema" class="code-input" rows="3" spellcheck="false" placeholder='{"type":"object","properties":{"name":{"type":"string"}},"required":["name"]}'></textarea></label></details>
+<p class="hint">保存后需按新接口范围生成用例；历史报告仍可查看。</p><p id="interface-error" class="form-error" role="alert" hidden></p>
+<div class="dialog-actions"><button type="button" data-close-dialog="interface-dialog">取消</button><span></span><button type="submit" id="save-interface" class="primary">保存接口</button></div>
+</form></dialog>
+<dialog id="delete-interface-dialog" aria-labelledby="delete-interface-title"><div class="dialog-heading"><h2 id="delete-interface-title">删除接口</h2><button data-close-dialog="delete-interface-dialog" aria-label="关闭删除接口">×</button></div><p id="delete-interface-name"></p><p class="hint">从本会话的测试范围移除，当前用例需重新生成。历史报告保留。</p><p id="delete-interface-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button data-close-dialog="delete-interface-dialog">取消</button><span></span><button id="confirm-delete-interface" class="danger-button">删除接口</button></div></dialog>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="探真 VERIQ 首页"><span class="brand-icon"><img src="/static/brand-orbit.svg" alt="" width="40" height="40"></span><span>探真<small>VERIQ · API 测试</small></span></a>
+    <div class="sidebar-label">工作空间 <span class="version">v0.9.0</span></div>
+    <button class="new-project" id="new-project"><span>＋</span> 新建测试会话</button>
+    <div class="sidebar-label history-label">历史会话 <span id="project-count">0</span><button id="open-trash" class="trash-link">回收站</button></div>
+    <div id="project-list" class="project-list"><p class="sidebar-hint">导入第一份文档，开始测试。</p></div>
+    <div class="sidebar-bottom">
+      <nav class="sidebar-management" aria-label="工作空间管理">
+        <button data-stage="6" class="sidebar-action" aria-label="压测"><svg class="sidebar-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17h4l3-10 4 14 3-9h4"/></svg><span class="sidebar-action-label">压测</span><span class="sidebar-action-trailing">›</span></button>
+        <button id="open-mcp" class="sidebar-action" aria-label="授权 Codex 访问测试台">
+          <svg class="sidebar-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m10 13 4-4m-5 7-1.5 1.5a4.2 4.2 0 0 1-6-6L5 8a4.2 4.2 0 0 1 6 0m2 8a4.2 4.2 0 0 0 6 0l3.5-3.5a4.2 4.2 0 0 0-6-6L15 8" transform="translate(0 -1)"/></svg>
+          <span class="sidebar-action-label">Codex 授权</span><span class="sidebar-action-trailing" aria-hidden="true">›</span>
+        </button>
+        <button class="model-open sidebar-action" aria-label="API 管理">
+          <svg class="sidebar-action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h5m4 0h7M4 17h9m4 0h3"/><circle cx="11" cy="7" r="2"/><circle cx="15" cy="17" r="2"/></svg>
+          <span class="sidebar-action-label">API 管理</span><span class="sidebar-action-trailing" aria-hidden="true"><span class="connection-dot"></span>›</span>
+        </button>
+        <button type="button" data-stage="7" class="integration-link sidebar-action" aria-label="集成管理 · PingCode">
+          <svg class="sidebar-action-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="15" y="15" width="6" height="6" rx="1.5"/><path d="M15 3h6v6h-6zM6 13v3a2 2 0 0 0 2 2h3"/></svg>
+          <span class="sidebar-action-label">集成管理</span><span class="sidebar-action-trailing"><span class="sidebar-action-meta">PingCode</span><span aria-hidden="true">›</span></span>
+        </button>
+        <button type="button" data-stage="8" class="integration-link sidebar-action" aria-label="集成管理 · 企微机器人">
+          <svg class="sidebar-action-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="13" rx="3"/><path d="M12 3v3M1 11v4m22-4v4M9 15h6"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/></svg>
+          <span class="sidebar-action-label">企微机器人</span><span class="sidebar-action-trailing"><span aria-hidden="true">›</span></span>
+        </button>
+      </nav>
+      <div id="sidebar-account"></div>
+    </div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb"><a href="/">← 全部测试</a> <span>/</span> <strong id="current-title">新建测试会话</strong></div><button id="workspace-connection" class="model-pill model-open"><span class="connection-dot"></span><span id="model-label">接入你的模型</span><span>↗</span></button></header>
+    <main>
+      <div class="page-title"><div><p class="eyebrow">API TEST WORKSPACE</p><h1 id="stage-title">导入接口文档</h1><p id="stage-description">把接口资料变成一份可以执行、可以追溯的测试方案。</p></div><span class="step-count" id="stage-count">STEP 01 / 04</span></div>
+      <nav class="stepper" aria-label="四个步骤"><button data-stage="1" class="active"><b>1</b><span>导入文档<small>识别接口与参数</small></span></button><i></i><button data-stage="2"><b>2</b><span>生成用例<small>查看并确认预期</small></span></button><i></i><button data-stage="3"><b>3</b><span>执行测试<small>发送真实请求</small></span></button><i></i><button data-stage="4"><b>4</b><span>测试报告<small>结果、依据与证据</small></span></button></nav>
+      <div id="session-progress">
+        <div id="codex-progress-panel" class="panel codex-progress" hidden aria-live="polite"></div>
+        <div id="job-status" class="job-status" hidden aria-live="polite"></div>
+      </div>
+      <section id="api-management" hidden></section><section id="load-management" hidden></section>
+      <section id="pingcode-management" class="pc-page integration-workspace" hidden aria-label="集成管理 · PingCode"></section>
+      <section id="wecom-management" class="pc-page integration-workspace" hidden aria-label="企微机器人"></section>
+      <div class="content-grid" id="workflow-content">
+        <div class="primary-column">
+          <section id="stage-1" class="stage-panel"><div id="ui-document-panel" hidden></div>
+            <section class="panel welcome-panel" id="welcome-panel" aria-labelledby="welcome-title">
+              <p class="eyebrow">内网共享 · 打开即用</p><h2 id="welcome-title">从文档到报告，在这里完成</h2>
+              <p>上传文档后，可交给 Codex 按目标完成检查与测试，也可在网页生成、核对并执行用例。</p>
+              <div class="welcome-actions"><a href="/guide">使用说明 →</a></div>
+            </section>
+            <div class="panel" id="document-panel"><div class="panel-heading"><h2>选择一份接口文档</h2><span class="quiet-tag">OpenAPI 3 / Markdown</span></div>
+              <label class="dropzone" id="dropzone" for="document-file"><span class="upload-icon">↥</span><strong>点击选择文件，或拖放到这里</strong><span>支持 .json、.yaml、.yml、.md · 最大 50 MB</span><input id="document-file" type="file" accept=".json,.yaml,.yml,.md,.markdown"></label>
+              <div class="form-row"><label>会话名称<input id="project-title" maxlength="120" placeholder="例如：用户中心接口测试"></label><label>文档名称<input id="document-name" value="openapi.yaml" maxlength="150"></label></div>
+              <label class="document-label">文档内容 <span id="document-size">也可以直接粘贴</span><textarea id="document-content" class="code-input" spellcheck="false" rows="10" placeholder="openapi: 3.0.3&#10;info:&#10;  title: My API&#10;  version: 1.0.0&#10;paths:&#10;  /health:&#10;    get:&#10;      responses:&#10;        '200':&#10;          description: OK"></textarea></label>
+            </div>
+            <div class="panel" id="document-target-panel">
+              <div class="panel-heading"><h2>测试地址 Base URL</h2><span class="quiet-tag">随文档保存</span></div>
+              <label>接口基础地址<input id="document-base-url" aria-describedby="document-target-hint" type="url" maxlength="2000" placeholder="https://test-api.example.com/v1"></label>
+              <p class="hint" id="document-target-hint" role="status">导入文档后自动识别，可在这里核对或修改。只检查文档可以留空。</p>
+              <div id="document-target-candidates"></div>
+              <p class="hint">执行时会将此地址与接口路径拼接，例如 /v1 + /login。填写允许测试的服务地址；内网地址需由管理员开通访问。</p>
+              <button id="save-document-target" class="primary" hidden>保存地址</button>
+              <div class="panel-footer" id="import-actions"><span class="hint">文档保存后，在下一步设置任务目标。</span><button class="primary" id="import-button">保存文档并继续 <span>→</span></button></div>
+            </div>
+            <div id="contract-preview"></div>
+          </section>
+          <section id="stage-2" class="stage-panel" hidden><div id="generation-panel"></div><div id="cases-panel"></div></section>
+          <section id="stage-3" class="stage-panel" hidden><div id="execution-panel"></div></section>
+          <section id="stage-4" class="stage-panel" hidden><div id="report-panel"></div><div id="load-results"></div></section>
+        </div>
+        <aside class="context-column">
+          <div class="cli-card"><div class="cli-heading"><span class="terminal-mark">›_</span><strong>CLI 同步操作</strong><span class="quiet-tag">可复制</span></div><p>网页与命令行共用同一套用例和执行流程。</p><div class="terminal"><div class="terminal-bar"><span></span><span></span><span></span><button id="copy-cli" title="复制命令">复制</button></div><pre id="cli-command"></pre></div><p id="cli-note" class="cli-note"></p><div id="asset-links" class="asset-links"></div><details class="cli-setup"><summary>首次使用 CLI</summary><p>在项目源码目录安装：</p><pre>python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .</pre><p>命令在源码目录执行。模型 Key 通过环境变量提供。</p><a href="/guide" target="_blank" rel="noopener">使用与部署说明 ↗</a></details></div>
+          <div class="context-card"><div class="context-title"><span class="small-dot"></span><h3>这一步会发生什么</h3></div><p id="stage-explanation"></p><div id="project-facts" class="project-facts"></div></div>
+          <div class="workspace-note"><span>↳</span><p>每次运行都会保留用例快照、请求响应与断言结果，方便修改后对比。</p></div>
+        </aside>
+      </div>
+      <footer class="page-footer"><span>探真 VERIQ <b>·</b> API 测试</span></footer>
+    </main>
+  </div>
+</div>
+<dialog id="model-dialog"><form id="model-form"><div class="dialog-heading"><div><p class="eyebrow">BRING YOUR OWN MODEL</p><h2>接入你的模型 API</h2></div><button type="button" id="close-model" class="icon-button" aria-label="关闭设置">×</button></div><label style="margin-top:18px">配置名称<input id="api-profile-name" required maxlength="80" placeholder="例如：DeepSeek 测试环境"></label><p class="dialog-intro">填写你自己的服务地址、模型名称和 Key，用它来生成测试用例。</p><div class="form-row"><label>服务商<select id="model-provider"></select></label><label>接口协议<select id="model-protocol"><option value="openai_chat">OpenAI Chat Completions</option><option value="openai_responses">OpenAI Responses</option><option value="anthropic">Anthropic Messages</option><option value="gemini">Google Gemini</option></select></label></div><label>API Base URL<input id="model-base-url" type="url" required placeholder="https://api.example.com/v1"></label><label>模型名称<input id="model-id" required autocomplete="off" placeholder="填写你的账户可调用的模型名称"></label><label>API Key <span id="key-state"></span><input id="model-key" type="password" autocomplete="new-password" spellcheck="false" placeholder="粘贴当前服务的 API Key"></label><div class="form-row"><label>单次输出额度（Token，留空自动）<input id="model-max-tokens" type="number" min="1" step="1" placeholder="自动配置，无需估算"></label><label>无响应等待时间 / 秒<input id="model-timeout" type="number" min="5" max="180" value="90" required></label></div><p class="hint"><span id="model-budget-hint"></span> <button type="button" id="auto-model-tokens" class="text-button">使用自动额度</button></p><p class="hint">连续多久没有收到模型数据才结束等待；持续返回内容或连接心跳时会继续接收，不按总耗时中断。</p><p class="hint model-hint">Key 在服务端加密保存，页面不会回显。生成或测试连接会向所选服务发送请求，费用由你的服务商账户承担。</p><p id="transport-hint" class="transport-hint" hidden>当前页面使用内网 HTTP。填写正式 Key 时建议通过 SSH 本地隧道访问，<a href="/guide" target="_blank" rel="noopener">使用说明中提供了命令 ↗</a>。</p><p id="model-test-result" role="status"></p><div class="dialog-actions"><button type="button" id="clear-model" class="text-button">取消</button><span></span><button type="button" id="test-model">保存并测试连接</button><button type="submit" class="primary">保存配置</button></div></form></dialog>
+<div id="toast" role="alert" hidden></div>
+<dialog id="case-import-dialog" aria-labelledby="case-import-title"><h2 id="case-import-title">导入自己的测试用例</h2><p class="hint">支持 JSON / CSV。JSON 支持多步骤链路；CSV 可用 Excel 编辑后另存为 CSV UTF-8。导入只保存用例，核对后再执行。</p><label>选择用例文件<input type="file" id="case-import-file" accept=".json,.csv"></label><label>文件名<input id="case-import-name" value="cases.json"></label><label>内容<textarea id="case-import-content" rows="10" class="code-input" spellcheck="false"></textarea></label><p id="case-import-error" class="form-error" role="alert"></p><div class="dialog-actions"><button data-wf="close-import">取消</button><button data-wf="template-csv">下载 CSV 模板</button><button data-wf="template-json">下载链路 JSON 模板</button><button data-wf="save-import" class="primary">追加导入</button></div></dialog>
+<dialog id="chain-dialog" aria-labelledby="chain-title"><div class="dialog-heading"><div><p class="eyebrow">业务链路编排 · 首版</p><h2 id="chain-title">请求之间如何衔接</h2></div><button data-wf="close-chain" aria-label="关闭业务链路">×</button></div><p id="chain-intro" class="hint"></p><div id="chain-preview-status" role="status" aria-live="polite"></div><div id="chain-view"></div><details id="chain-editor"><summary>编辑请求、变量提取和清理步骤</summary><label>用例 JSON<textarea id="chain-json" class="code-input" spellcheck="false" rows="15"></textarea></label><button data-wf="preview-chain">预览修改</button><button class="primary" data-wf="save-chain">保存并重新核对</button><p class="hint">保存不会发请求；修改后的用例需重新确认。后续步骤使用 ${变量名} 引用前序提取结果，Cookie 在同一链路自动传递。</p></details><p id="chain-error" class="form-error" role="alert"></p></dialog>
+<dialog id="manual-case-dialog" aria-labelledby="manual-case-title"><div class="dialog-heading"><h2 id="manual-case-title">手动添加测试用例</h2><button type="button" data-wf="close-manual" aria-label="关闭添加用例">×</button></div><p class="hint">选择接口，填写要发送的参数和应该返回的结果。保存只添加用例，不会发送请求。</p>
+<form id="manual-case-form">
+<label>用例名称<input id="manual-title" placeholder="例如：密码错误时登录失败" required></label>
+<label>测试哪个接口<select id="manual-operation" required><option value="">请选择要测试的接口</option></select></label>
+<div class="manual-request-route"><span id="manual-method">选择接口后显示请求方法</span><label>请求路径<input id="manual-path" placeholder="选择接口后填写；把 {id} 替换为实际值"></label></div>
+<h3>发送什么</h3><label>请求体格式<select id="manual-body-mode"><option value="none">不发送请求体</option><option value="json">JSON 参数</option><option value="form">表单参数（URL 编码）</option><option value="raw">原始文本</option></select></label>
+<div id="manual-body-fields" hidden><div id="manual-body"></div><button type="button" data-wf="manual-add-row" data-group="body">＋ 添加请求体参数</button></div>
+<label id="manual-raw-fields" hidden>请求体文本<textarea id="manual-raw" rows="3" placeholder="填写原始内容；需要时在请求头中指定 Content-Type"></textarea></label>
+<details><summary>查询参数与请求头（可选）</summary><h4>查询参数</h4><div id="manual-params"></div><button type="button" data-wf="manual-add-row" data-group="params">＋ 添加查询参数</button><h4>请求头</h4><div id="manual-headers"></div><button type="button" data-wf="manual-add-row" data-group="headers">＋ 添加请求头</button></details>
+<label>鉴权场景<select id="manual-auth"><option value="normal">正常鉴权（需要时在请求头填写凭据）</option><option value="auth_missing">专门测试未登录 / 不带鉴权凭据</option></select></label><h3>应该返回什么</h3><p class="hint">至少填写一项预期。只检查状态码时，不会自动检查响应内容。</p><label>预期 HTTP 状态码<input id="manual-status" type="number" min="100" max="599" placeholder="例如 200、400、401；按你的用例预期填写"></label>
+<label>响应字段检查</label><div id="manual-expected"></div><button type="button" data-wf="manual-add-row" data-group="expected">＋ 添加响应字段检查</button><p class="hint">如 message；嵌套字段写 /data/id。检查字段是否存在时，值类型选择「只检查存在」。</p>
+<details><summary>数据清理与备注（可选）</summary><label>测试数据清理<select id="manual-cleanup"><option value="environment">使用测试环境已有的清理能力</option><option value="none">此用例不会产生需要清理的数据</option></select></label><label id="manual-cleanup-reason-field" hidden>无需清理的原因<input id="manual-cleanup-reason" placeholder="例如：只查询信息，不修改数据"></label><p class="hint">创建数据的用例若环境不支持清理，可保存后在高级链路编辑中添加清理步骤。</p><label>备注<textarea id="manual-notes" rows="2" placeholder="补充测试目的或前置条件"></textarea></label></details>
+<p id="manual-error" class="form-error" role="alert"></p><div class="dialog-actions"><button type="button" data-wf="close-manual">取消</button><button type="button" data-wf="save-manual" class="primary">保存用例</button></div></form></dialog>
+<dialog id="remove-case-dialog" aria-labelledby="remove-case-title"><h2 id="remove-case-title">删除用例？</h2><p class="hint">从当前用例列表移除，可在「已删除用例」中恢复。历史执行报告和用例快照会保留。</p><p id="remove-case-error" class="form-error" role="alert"></p><div class="dialog-actions"><button data-wf="close-remove-case">取消</button><button data-wf="confirm-remove-case" class="danger-text">删除用例</button></div></dialog>
+
+</body>
+</html>

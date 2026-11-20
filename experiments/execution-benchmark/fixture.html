@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>隔离知识库执行实验</title>
+<style>body{font:16px system-ui;max-width:1100px;margin:30px auto;color:#17233c;background:#f4f7fb}section{padding:20px;background:white;margin:12px 0;border:1px solid #dde3ed;border-radius:12px}button,input{font:inherit;padding:8px;margin:4px}li{margin:6px}dialog{border:1px solid #bcc9df;border-radius:12px}#answer{white-space:pre-wrap}#scope{display:flex;flex-wrap:wrap;gap:8px}</style>
+<h1>企业知识库 · 隔离仿真</h1><p>合成数据与可控故障；此页面不是业务系统。</p>
+<section><h2>添加资料</h2><input type="file" aria-label="选择文件"><p id="staged" role="status"></p><button id="upload">上传资料</button><p id="feedback" role="alert"></p></section>
+<section><h2>资料列表</h2><ul id="docs"></ul></section>
+<section><h2>资料问答</h2><div id="scope" role="group" aria-label="本次提问文件"></div><input aria-label="你的问题" id="question"><button id="send">发送问题</button><p id="answer"></p></section>
+<section><h2>历史问答</h2><ul id="history"></ul><input id="newname" aria-label="问答名称"><button id="rename">保存名称</button><button id="delete-history">删除历史问答</button></section>
+<dialog><p>确认上传当前文件？</p><button id="confirm">确认上传</button></dialog>
+<script>
+const run=new URL(location.href).searchParams.get('run');let state,chosen=new Set(),staged;
+const $=id=>document.getElementById(id);
+async function refresh(){const next=await(await fetch('/state?run='+run)).json();if(!state||next.revision!==state.revision){state=next;render()}}
+async function op(action,extra={}){state=await(await fetch('/op?run='+run,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...extra})})).json();render()}
+function button(label,fn){const el=document.createElement('button');el.textContent=label;el.onclick=fn;return el}
+function render(){
+ $('docs').replaceChildren();for(const d of state.docs){const row=document.createElement('li');row.dataset.name=d.name;row.dataset.id=d.id;row.dataset.status=d.status;row.dataset.enabled=String(d.enabled);const text=document.createElement('span');text.textContent=`${d.name} · ${d.status} · ${d.enabled?'已启用':'已停用'}`;row.append(text,button('切换 '+d.name,()=>op('toggle',{id:d.id})),button('删除 '+d.name,()=>op('delete',{id:d.id})));$('docs').append(row)}
+ const enabled=state.docs.filter(d=>d.enabled&&d.status==='就绪');chosen=new Set([...chosen].filter(id=>enabled.some(d=>d.id===id)));
+ $('scope').replaceChildren();if(enabled.length>state.threshold){for(const d of enabled){const label=document.createElement('label'),cb=document.createElement('input');cb.type='checkbox';cb.checked=chosen.has(d.id);cb.setAttribute('aria-label','选择 '+d.name);cb.onchange=()=>{cb.checked?chosen.add(d.id):chosen.delete(d.id);render()};label.append(cb,document.createTextNode(d.name));$('scope').append(label)}}
+ $('send').disabled=!$('question').value.trim()||!enabled.length||(enabled.length>state.threshold&&!chosen.size);
+ $('upload').disabled=!staged||state.denied;$('staged').textContent=staged?'已选择：'+staged.name:'';
+ $('feedback').textContent=state.denied?'当前账号没有上传权限':state.feedback;$('answer').textContent=state.answer;
+ $('history').replaceChildren(...state.history.map(h=>{const el=document.createElement('li');el.textContent=h.name;return el}));document.body.dataset.revision=state.revision;
+}
+document.querySelector('input[type=file]').onchange=e=>{staged=e.target.files[0];render()};
+async function upload(){await op('upload',{name:staged.name,bytes:staged.size});staged=undefined;document.querySelector('input[type=file]').value='';render()}
+$('upload').onclick=()=>state.confirmation?document.querySelector('dialog').showModal():upload();
+$('confirm').onclick=()=>{document.querySelector('dialog').close();upload()};
+$('question').oninput=render;$('send').onclick=()=>op('ask',{ids:[...chosen]});
+$('rename').onclick=()=>op('rename',{name:$('newname').value});$('delete-history').onclick=()=>op('delete-history');
+refresh();setInterval(refresh,80);
+</script></html>

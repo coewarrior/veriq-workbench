@@ -1,0 +1,7 @@
+/* Initial state only. The existing layout takes over after session restoration. */
+#workspace-loading { display: none; }
+.workspace-loading #workspace-loading { display: block; }
+.workspace-loading :is(#workflow-content, #session-progress, #api-management, #load-management, #pingcode-management, #wecom-management) { display: none !important; }
+.workspace-loading:not(.ui-workspace) .stepper { visibility: hidden; }
+.workspace-loading.ui-workspace .sidebar-management [data-stage="6"] { display: none; }
+.ui-workspace #workspace-loading { max-width: 1120px; margin-left: auto; margin-right: auto; }

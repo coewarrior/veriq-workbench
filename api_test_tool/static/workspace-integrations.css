@@ -1,0 +1,36 @@
+.shell .integration-workspace.pc-page {
+  background: transparent;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  font: inherit;
+  color: inherit;
+}
+:root body .shell #api-management {
+  width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
+}
+:root body .shell .workspace main:has(:is(#api-management, .integration-workspace):not([hidden])) .page-title {
+  max-width: 1040px;
+  margin-inline: auto;
+}
+.integration-workspace .pc-grid {
+  max-width: 880px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.integration-workspace #wecom-config > label:not(.wecom-auto) { max-width: 640px; }
+.integration-workspace > .pc-card:first-of-type { margin-top: 0; }
+.integration-workspace .pc-card { padding: 20px; }
+.integration-workspace .wecom-auto { display: flex; align-items: center; justify-content: space-between; }
+.integration-workspace.pc-page select:not([multiple]):not([size]) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.integration-workspace.pc-page select::picker-icon { flex-shrink: 0; margin-inline-start: auto; }
+@media (max-width: 640px) {
+  .integration-workspace .pc-card { padding: 18px; }
+  .integration-workspace .pc-grid { grid-template-columns: minmax(0, 1fr); }
+}

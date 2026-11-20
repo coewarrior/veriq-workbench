@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PingCode · 集成管理</title><link rel="stylesheet" href="/static/pingcode.css"><script src="/static/integration-back.js" defer></script><script src="/static/pingcode.js" defer></script><script src="/static/pingcode-guide.js" defer></script><script src="/static/account-bar.js" defer></script><link rel="icon" type="image/svg+xml" href="/static/favicon-orbit.svg"><link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-orbit-32.png"><link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon-orbit.png"><link rel="stylesheet" href="/static/shared-glass.css"><link rel="stylesheet" href="/static/controls.css"><link rel="stylesheet" href="/static/account-bar.css"></head><body class="pc-page"><main class="pc-container"><a id="pingcode-back" data-integration-back href="/">← 返回上一页</a><p class="pc-eyebrow">INTEGRATIONS / 缺陷协作</p><h1>连接 PingCode</h1><p class="pc-muted">在报告里审核缺陷，一键提交到团队项目。提交过程不调用大模型。</p><section class="pc-card"><div class="pc-heading"><h2>连接配置</h2><span id="pc-config-status">正在读取…</span></div><p id="pc-scope" class="pc-muted"></p><form id="pc-config-form"><div class="pc-grid"><label>API 基础地址<input name="base_url" type="url" required placeholder="https://open.pingcode.com"></label><label>接口版本<select name="api_version"><option value="pjm">当前接口（pjm）</option><option value="project">旧版接口（project）</option></select></label><label>授权方式<select name="auth_mode"><option value="client_credentials">应用凭据（Client ID / Secret）</option><option value="token">已有访问令牌（Access Token）</option></select></label><label data-client>Client ID<input name="client_id" autocomplete="off"></label><label data-client>Client Secret<input name="client_secret" type="password" autocomplete="new-password" placeholder="留空保留；更换地址或应用后需重新填写"></label><label data-token hidden>Access Token<input name="access_token" type="password" autocomplete="new-password" placeholder="留空保留已保存令牌"></label></div><p class="pc-muted">在 PingCode 企业后台的凭据管理中创建应用，配置项目数据范围。凭据保存在服务器，页面不会回显。私有部署地址需由管理员允许访问。</p><p id="pc-config-message" class="pc-message" role="status"></p><div class="pc-actions"><button class="pc-secondary" id="pc-clear" type="button">清除个人配置</button><button class="pc-primary" type="submit">保存并读取项目</button></div></form></section><details class="pc-card pc-guide" id="credentials-guide">
+<summary><span>如何获取 Client ID 和 Client Secret</span><span class="pc-guide-expand">展开图解 ＋</span><span class="pc-guide-collapse">收起图解 −</span></summary>
+<p class="pc-muted">按图中 1–4 的顺序进入 PingCode 凭据管理，复制你自己的应用凭据。</p>
+<ol>
+<li>点击左上角的企业名称，打开企业菜单。</li>
+<li>选择「管理后台」。</li>
+<li>切换到「应用」，进入左侧「凭据管理」。</li>
+<li>展开对应应用，分别点击 Client ID 和 Secret 旁的复制按钮，粘贴到上方同名输入框。</li>
+</ol>
+<figure class="pc-guide-figure">
+<a href="/static/help-assets/pingcode-credentials-steps.png" id="pc-guide-open-image" aria-haspopup="dialog" aria-label="放大查看 PingCode 凭据获取步骤">
+<img src="/static/help-assets/pingcode-credentials-steps.png" alt="PingCode 凭据获取图解：1 点击企业名称，2 进入管理后台，3 选择应用与凭据管理，4 展开应用并复制 Client ID 和 Secret。" loading="lazy" width="1852" height="840">
+</a>
+<figcaption>点击图片放大，可点击关闭按钮或按 Esc 返回。图中的 Client ID 仅为示例，请复制你自己应用的凭据。</figcaption>
+</figure>
+<p class="pc-muted">没有对应应用时，可由管理员在「凭据管理」中新建应用并配置项目数据范围。填好上方连接配置后，点击「保存并读取项目」，再选择默认项目与缺陷类型。</p>
+<button type="button" class="pc-secondary" id="pc-guide-collapse">收起教程 ↑</button>
+</details><section class="pc-card"><h2>默认提交项目</h2><p class="pc-muted">选好默认值后，每条缺陷仍可在审核窗口修改。</p><div class="pc-grid"><label>项目<select id="pc-default-project"><option value="">先保存连接配置</option></select></label><label>缺陷类型<select id="pc-default-type"><option value="">先选择项目</option></select></label></div><div class="pc-actions"><button id="pc-refresh" class="pc-secondary">读取项目 / 测试连接</button><button id="pc-save-default" class="pc-primary">保存默认选择</button></div><p id="pc-default-message" class="pc-message" role="status"></p></section><section class="pc-card"><h2>怎样提交缺陷</h2><ol><li>打开测试报告，在问题旁点击「提交到 PingCode」。</li><li>核对标题、描述、项目、负责人和项目字段。</li><li>勾选已审核，点击「确认并推送」。成功后显示缺陷编号。</li></ol><p class="pc-muted">文档检查发现也可提交。执行异常需要先判断是否为产品缺陷。提交者身份取决于 PingCode 授权；测试台数据按登录账号隔离，账号与 PingCode 成员身份不自动对应。</p><a href="https://pingcode.apifox.cn/folder-20092472" target="_blank" rel="noopener">官方授权说明 ↗</a></section></main>
+<nav class="pc-container"><a href="/integrations/wecom">企微机器人 · 报告推送 →</a></nav>
+<dialog id="pc-guide-image-dialog" aria-labelledby="pc-guide-image-title">
+<div class="pc-image-toolbar"><h2 id="pc-guide-image-title">PingCode 凭据获取图解</h2><button type="button" class="pc-secondary" id="pc-guide-close-image" autofocus aria-label="关闭图片">关闭 ×</button></div>
+<div class="pc-image-scroll"><img src="/static/help-assets/pingcode-credentials-steps.png" alt="依次点击企业名称、管理后台、应用与凭据管理，展开应用后复制 Client ID 和 Secret。" width="1852" height="840"></div>
+<p class="pc-muted">按 Esc 或点击图片外的遮罩也可关闭。</p>
+</dialog></body></html>

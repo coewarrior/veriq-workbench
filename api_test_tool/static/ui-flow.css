@@ -1,0 +1,77 @@
+/* Only the requirements/page workspace uses this layout; API execution stays intact. */
+@media screen {
+  :root body.ui-workspace .shell .stepper button { border: 0; }
+  :root body.ui-workspace .shell .stepper button.active { background: #a7bbff16; }
+  :root body.ui-workspace .shell .ui-pending { background: #342d20; border-color: #74613d; }
+  :root body.ui-workspace .shell .ui-pending h3 { color: #f0d39b; }
+
+  :root body.ui-workspace .shell .content-grid { grid-template-columns: minmax(0,1fr); max-width: 1120px; margin: 0 auto; gap: 0; }
+  :root body.ui-workspace .shell .page-title, :root body.ui-workspace .shell .stepper, :root body.ui-workspace .shell #session-progress { max-width: 1120px; margin-left: auto; margin-right: auto; }
+  :root body.ui-workspace .shell .stepper { justify-content: space-between; }
+  :root body.ui-workspace .shell .context-column { display: block; }
+  :root body.ui-workspace .shell .context-column :is(.cli-heading,.cli-card>p,.context-title,#stage-explanation,.workspace-note) { display: none; }
+  :root body.ui-workspace .shell .context-column :is(.cli-card,.context-card) { border: 0; box-shadow: none; margin: 0; background: transparent; padding: 10px 0; }
+  :root body.ui-workspace .shell .context-column :is(.cli-card,.context-card)::before { display: none; }
+  :root body.ui-workspace .shell .context-column .context-card { display: block; }
+  #mcp-dialog.ui-session-handoff #mcp-intro, #mcp-dialog.ui-session-handoff #refresh-mcp { display: none; }
+  #mcp-dialog.ui-session-handoff #mcp-target .hint { display: none; }
+  #mcp-dialog.ui-session-handoff #mcp-message { margin-top: 16px; }
+  #mcp-dialog.ui-session-handoff .mcp-copy-actions { margin-top: 16px; }
+  #mcp-dialog.ui-session-handoff #pair-mcp { font-size: 12px; padding: 6px 10px; }
+  #mcp-dialog.ui-session-handoff details>summary { font-size: 12px; color: var(--muted); }
+  .ui-workspace #report-panel>.panel>.hint, .ui-workspace #report-panel>.panel>p[style] { display: none; }
+  .ui-workspace #report-panel .report-title>span { display: none; }
+  .ui-report-summary { margin-top: 14px; white-space: pre-wrap; line-height: 1.8; font-size: 14px; overflow-wrap: anywhere; }
+  .ui-report-history>summary { font-size: 13px; color: var(--muted); }
+  .ui-session-details { color: var(--muted); font-size: 12px; padding: 8px 0 16px; }
+  .ui-workspace details>summary { cursor: pointer; }
+  .ui-workspace .ui-requirements-editor { padding: 0; border: 1px solid var(--line); border-radius: 14px; background: #0e162466; overflow: hidden; }
+  :root body.ui-workspace .shell .ui-requirements-editor textarea { margin-top: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; width: 100%; }
+  .ui-requirements-editor:focus-within { border-color: #a7bbff; }
+  .ui-attachment-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 10px 12px; border-top: 1px solid var(--line); }
+  .ui-attachment-button { position: relative; display: inline-flex; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; font-size: 13px; }
+  .ui-attachment-button input { position: absolute; width: 1px; height: 1px; opacity: 0; padding: 0; clip-path: inset(50%); }
+  .ui-attachment-button:focus-within { outline: 2px solid #a7bbff; outline-offset: 2px; }
+  .ui-requirements-editor .ui-attachment-list { margin: 0; padding: 0 12px; }
+  .ui-requirements-editor .ui-attachment-list:empty { display: none; }
+  .ui-start-meta { justify-content: flex-end; }
+  .ui-start-card #target-url { max-width: 760px; }
+  .ui-start-card form>label { margin-top: 16px; }
+  #ui-information-form>label { margin-top: 16px; }
+  .ui-options, .ui-attachment-add { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .ui-options summary { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; }
+  .ui-options[open]>label, .ui-materials[open]>form, .ui-import-results[open]>form { margin-top: 16px; }
+  .ui-goal-summary { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.8; margin-bottom: 8px; }
+  .ui-next-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .ui-action-toggles { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .ui-action-toggle { display: inline-flex; align-items: center; gap: 10px; }
+  .ui-action-toggle[aria-expanded="true"] { border-color: #a7bbff; }
+  .ui-test-actions .ui-action-options { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .ui-test-actions form>label, #ui-information-conditions form>label { margin-top: 14px; }
+  .ui-test-actions form>button, #ui-information-conditions form>button { margin-top: 14px; }
+  .ui-case-selection { max-height: 280px; overflow-y: auto; margin: 14px 0; }
+  .ui-case-selection label { display: flex; align-items: baseline; gap: 8px; margin: 8px 0; }
+  .ui-materials>summary, .ui-import-results>summary { font-size: 14px; font-weight: 550; }
+  .ui-result-counts { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-bottom: 16px; }
+  .ui-result-counts .stat strong { color: #a8bdff; }
+  .ui-result-counts .stat.pass strong { color: #80dbb9; }
+  .ui-result-counts .stat.fail strong { color: #f6a1b1; }
+  .ui-pending { padding: 14px 16px; margin: 12px 0; border: 1px solid #eadbb8; border-radius: 10px; background: #fffaf1; }
+  .requirement-panel .ui-pending h3 { margin: 0 0 6px; }
+  .ui-pending>ul { padding-left: 20px; font-size: 13px; }
+  .ui-next-actions>.ui-options { margin: 0; padding: 0; border: 0; }
+  .ui-next-actions>.ui-options>summary { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; }
+  .ui-next-actions>.ui-options[open] { flex-basis: 100%; }
+  .ui-action-menu { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 10px; }
+  .ui-result-actions>.ui-next-actions { justify-content: flex-end; }
+  #ui-regression-form>label, .ui-materials form>label { margin-top: 14px; }
+  .ui-workspace .requirement-panel .ui-detail-group>summary { font-size: 13px; color: var(--muted); }
+  .ui-workspace .requirement-cases summary>span:first-of-type { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .ui-workspace .requirement-panel :is(input,textarea,select) { max-width: 100%; }
+  @media (max-width: 760px) {
+    .ui-result-counts { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .ui-task-card .ui-next-actions { width: 100%; }
+    .ui-next-actions .primary { flex: 1; }
+    :root body.ui-workspace .shell .stepper button>span { font-size: 12px; }
+  }
+}

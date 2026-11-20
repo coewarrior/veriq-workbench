@@ -1,0 +1,60 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>API 测试使用说明 · 测试工作台</title><link rel="stylesheet" href="/static/help.css"><script src="/static/account-bar.js" defer></script><link rel="icon" type="image/svg+xml" href="/static/favicon-orbit.svg"><link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-orbit-32.png"><link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon-orbit.png"><link rel="stylesheet" href="/static/shared-glass.css"><link rel="stylesheet" href="/static/controls.css"><link rel="stylesheet" href="/static/account-bar.css"></head><body>
+<article>
+  <a href="/api-testing">← 返回 API 测试</a>
+  <p class="eyebrow">内网使用说明</p>
+  <h1>打开网页，从文档到报告</h1>
+  <p>打开测试工作台，注册或登录后选择「API 测试」即可使用，无需安装软件。文档、用例、模型配置和报告保存在服务器，按账号隔离；换浏览器后登录同一账号，可以继续自己的测试会话。</p>
+
+  <h2>使用自己的接口文档</h2>
+  <ol>
+    <li><strong>导入文档：</strong>新建测试会话，上传或粘贴 OpenAPI 3（JSON / YAML）或 Markdown，每份最大 50 MB。在同一步核对自动填充的 Base URL，点击「保存文档并继续」；随后可在接口管理中新增、编辑或删除接口。</li>
+    <li><strong>生成用例或设置目标：</strong>导入自己的用例，或使用 AI 生成；也可导入后由 AI 补充，或 AI 生成后自己补充。需要 AI 时，选择 Codex 或自己配置的模型 API。</li>
+    <li><strong>执行测试：</strong>网页流程中核对并采纳有依据的用例，确认已保存的目标地址后执行。Codex 路径由 Codex 根据目标完成检查、用例准备和必要的执行。</li>
+    <li><strong>查看报告：</strong>查看结论、请求与响应、断言和未执行原因；有缺陷时可审核后提交 PingCode。</li>
+  </ol>
+  <p class="note">只想检查接口文档时，选择「使用 Codex · MCP」，点击「只检查接口文档」。无需填写 Base URL、生成可执行用例或发送测试请求，也能输出文档检查报告。无法自动解析的原文仍可交给 Codex 分析。</p>
+
+  <h2>Base URL 在导入文档时确认</h2>
+  <p>Base URL 就是你要测试的业务服务基础地址。导入页会读取 OpenAPI 根级 <code>servers</code>，以及 Markdown 中明确标注的 <code>Base URL</code>、基础地址或服务地址。多个地址可选择，也能手动修改；识别不到时，只需在这里补充。</p>
+  <p>地址可以包含 <code>/v1</code> 等基础路径。例如 Base URL 为 <code>https://test-api.example.com/v1</code>，文档接口为 <code>/login</code>，实际请求地址就是 <code>https://test-api.example.com/v1/login</code>。相对地址或没有默认值的变量，需要补成完整地址。</p>
+  <p>地址随会话保存，网页执行、Codex 和下载的 CLI 环境配置共用它。执行页只展示本次目标；需要更改时，返回导入步骤修改并点击「保存地址」。历史报告仍保留当时的运行地址。</p>
+  <p>测试请求由测试台服务器发出，目标服务需要能被它访问。内网地址需由管理员加入允许访问的范围；从文档识别到地址不等于自动开通访问。若接口需要登录凭据、前置数据或清理规则，还需提供相应信息。</p>
+  <p>报告里的 <code>127.0.0.1</code> 指执行服务所在环境的本机，不是打开网页的用户电脑。</p>
+
+  <h2>交给 Codex</h2>
+  <p>保存文档后，在任务目标处选择「使用 Codex · MCP」，写明想完成的检查或测试，再点击「交给 Codex 完成任务」。复制完整消息发给能访问内网的 Codex，消息包含文档位置、任务目标、连接码和接入方法；Codex 按目标推进到报告，网页同步显示结果。</p>
+  <p>侧栏的「Codex 连接」用于管理工作空间授权，不会自动指定历史文档。连接码一次有效、10 分钟过期；已建立的连接无需每一步重新配对。首次未安装 MCP 时，可使用消息中提供的免安装 Python 客户端。</p>
+  <p><a href="/static/mcp-guide.html">查看 Codex 接入说明 ↗</a></p>
+
+  <h2>模型 API（可选）</h2>
+  <p>在「API 管理」中添加自己的服务地址、模型名称和 Key，生成时选择使用。每个会话可选择自己的配置。保存或切换配置不会调用模型；测试连接和模型生成会发送请求，并产生服务商费用。Codex 路径使用 Codex 自身额度，不调用这里保存的模型 API。</p>
+  <p>目前提供 OpenAI Chat Completions / Responses、Anthropic Messages、Gemini 协议适配，具体兼容性取决于服务商支持的接口和模型。单次输出额度默认自动，长文档按接口分批处理；自动额度仍受服务商的模型限制约束。无响应等待时间指连续未收到数据的时长，持续返回数据时不会仅因总耗时结束读取。</p>
+
+  <h2>审核后提交 PingCode</h2>
+  <p>首次配置可先查看<a href="/integrations/pingcode#credentials-guide">Client ID / Secret 获取图解</a>，按图中的步骤复制应用凭据。</p>
+  <ol>
+    <li>在侧栏「集成管理 · PingCode」中配置连接，读取项目并保存默认项目与缺陷类型；也可使用管理员提供的共享连接。</li>
+    <li>打开完整报告，在问题旁点击「提交到 PingCode」，核对标题、复现证据、项目、负责人和项目字段。</li>
+    <li>确认已审核后推送。成功时会显示缺陷编号与链接，可到 PingCode 查看。</li>
+  </ol>
+  <p>生成报告不会自动创建 PingCode 缺陷。文档检查发现也可提交；执行异常是否属于产品缺陷，需要人工判断。PingCode 中的提交身份取决于连接所使用的授权。</p>
+
+  <h2>数据与报告</h2>
+  <p>每次执行保留冻结用例、实际请求与响应、断言和清理记录。通过只代表本轮已声明的断言满足预期；未执行、缺少依据或清理失败会单独说明。只检查文档的报告不会标成接口测试已通过。</p>
+  <p>数据归属于登录账号，退出登录或清除 Cookie 不会删除服务器上的会话；重新登录同一账号即可查看。完整报告链接可在内网免登录只读查看，但不会授予工作空间、原文、原始 JSON、配置或提交权限。删除会话后可从回收站恢复。</p>
+
+  <h2>CLI 是可选工具</h2>
+  <p>网页右侧提供当前步骤的 CLI 命令，适合需要命令行操作的用户。网页操作不要求下载源码或安装 CLI；使用 CLI 时，可下载文档、用例和环境配置，其中 <code>environment.json</code> 使用会话里保存的 Base URL。CLI 从运行命令的电脑发送请求，该电脑也需要能访问目标服务。</p>
+  <p>Codex 可以使用<a href="/static/api-test-client.py" download>免安装客户端</a>调用测试台服务器，工具格式与 MCP 相同；这条路径中的测试请求仍由服务器执行。</p>
+
+  <h2>遇到问题</h2>
+  <ul>
+    <li>地址为空或不正确：回到导入文档核对 Base URL，修改后保存；只检查文档可以留空。</li>
+    <li>连接码过期：重新打开交接弹窗，复制新消息。</li>
+    <li>网页暂时断开：重新登录或刷新后从历史会话继续，不要重复启动正在执行的任务。</li>
+    <li>有报告但未全部通过：展开失败、未执行和清理信息，查看具体证据。</li>
+    <li>无法访问目标：核对地址、服务器网络连通性和访问范围；接口鉴权失败时检查对应的登录或授权信息。</li>
+  </ul>
+</article>
+</body>
+</html>

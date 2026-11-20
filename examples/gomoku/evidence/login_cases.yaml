@@ -1,0 +1,161 @@
+single_request_cases:
+  - id: "TC-LOG-001"
+    name: "正确账号密码登录"
+    setup_registered_user: true
+    payload:
+      username: "login_success_{uniq}"
+      password: "123456"
+    expected_status: 200
+    expected_json:
+      reason: "用户登录成功！"
+      result: true
+    require_cookie: true
+
+  - id: "TC-LOG-005"
+    name: "密码错误"
+    setup_registered_user: true
+    setup_password: "123456"
+    payload:
+      username: "login_wrongpwd_{uniq}"
+      password: "wrongpwd"
+    expected_status: 400
+    expected_json:
+      reason: "账号/密码错误!"
+      result: false
+
+  - id: "TC-LOG-006"
+    name: "用户名不存在"
+    payload:
+      username: "notexist_{uniq}"
+      password: "123456"
+    expected_status: 400
+    expected_json:
+      reason: "账号/密码错误!"
+      result: false
+
+  - id: "TC-LOG-007"
+    name: "用户名为空"
+    payload:
+      username: ""
+      password: "123456"
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-LOG-008"
+    name: "密码为空"
+    payload:
+      username: "admin"
+      password: ""
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-LOG-009"
+    name: "用户名和密码均为空"
+    payload:
+      username: ""
+      password: ""
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-LOG-010"
+    name: "缺少 username 字段"
+    payload:
+      password: "123456"
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-LOG-011"
+    name: "缺少 password 字段"
+    payload:
+      username: "admin"
+    expected_status: 400
+    expected_json:
+      reason: "请输入账号/密码"
+      result: false
+
+  - id: "TC-LOG-012"
+    name: "用户名前后带空格"
+    setup_registered_user: true
+    payload:
+      username: "trimuser_{uniq}"
+      password: "123456"
+    add_spaces_on_login: true
+    expected_status: 400
+    expected_json:
+      reason: "账号/密码错误!"
+      result: false
+
+preregister_cases:
+  - id: "TC-LOG-002"
+    name: "注册后新用户登录"
+    payload:
+      username: "login_ok_{uniq}"
+      password: "123456"
+    login_expected:
+      status: 200
+      json:
+        reason: "用户登录成功！"
+        result: true
+      require_cookie: true
+
+  - id: "TC-LOG-003"
+    name: "1 字符账号密码登录"
+    use_single_char_user: true
+    payload:
+      password: "9"
+    login_expected:
+      status: 200
+      json:
+        reason: "用户登录成功！"
+        result: true
+      require_cookie: true
+
+  - id: "TC-LOG-004"
+    name: "登录成功后访问 /info"
+    payload:
+      username: "info_after_login_{uniq}"
+      password: "123456"
+    login_expected:
+      status: 200
+      json:
+        reason: "用户登录成功！"
+        result: true
+      require_cookie: true
+    info_expected_keys:
+      - "id"
+      - "username"
+      - "score"
+      - "total_count"
+      - "win_count"
+
+repeat_cases:
+  - id: "TC-LOG-013"
+    name: "连续错误登录无锁定"
+    setup_registered_user: true
+    payload:
+      username: "repeat_wrong_{uniq}"
+      password: "wrongpwd"
+    setup_password: "123456"
+    repeat: 10
+    expected_status: 400
+    expected_json:
+      reason: "账号/密码错误!"
+      result: false
+
+  - id: "TC-LOG-014"
+    name: "未注册账号登录"
+    payload:
+      username: "hacker_{uniq}"
+      password: "123456"
+    expected_status: 400
+    expected_json:
+      reason: "账号/密码错误!"
+      result: false
